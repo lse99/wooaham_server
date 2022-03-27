@@ -6,13 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication
-//아직 DB 설정 안 해서 빌드 안 됨 - 설정 후 아래 어노테이션 삭제
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
 public class WooahamServerApplication {
 
 	public static void main(String[] args) {
 
 		SpringApplication.run(WooahamServerApplication.class, args);
+
+		// 메모리 사용량 출력
+		long heapSize = Runtime.getRuntime().totalMemory();
+		System.out.println("HEAP Size(M) : "+ heapSize / (1024*1024) + " MB");
 	}
 
 }

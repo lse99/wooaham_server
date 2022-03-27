@@ -1,11 +1,15 @@
+server:
+  port: 9000
+
 spring:
-  profiles.active: local
-  # 데이터 소스 설정
+  application:
+    name: wooaham
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://
-    username:
-    password:
+    url: jdbc:mysql://wooaham.cgpld7mfjjpf.ap-northeast-2.rds.amazonaws.com:3306/wooaham
+    username: wooaham
+    password: wooaham1218!
     hikari:
       pool-name: jpa-hikari-pool
       maximum-pool-size: 5
@@ -15,11 +19,11 @@ spring:
       driver-class-name: ${spring.datasource.driver-class-name}
       data-source-properties:
         rewriteBatchedStatements: true
-  # JPA 설정
+
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update  # 처음엔 create로 둘까
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
