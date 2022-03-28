@@ -43,10 +43,10 @@ lse0301
 ## 서버 배포(AWS EC2내에서 실행)
 **1. 위에 AWS 접속 방법 -- ssh 인증으로 콘솔에 접속**
 
-**2. /home/ec2-user/app/ㅁㅁㅁㅁ 로 이동**
+**2. /home/ubuntu/app/wooaham_server/build/libs로 이동**
 
 ```
-cd /home/ec2-user/app/ㅁㅁㅁㅁ
+cd /home/ubuntu/app/wooaham_server/build/libs
 ```
 **3. git 에 있는 최신 master 브랜치 반영**
 
