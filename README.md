@@ -31,14 +31,13 @@ lse0301
 
 **3. 다음 과정 진행** 
 ```
-  인스턴스 ID : i-019610d9e7da93076
   1.SSH 클라이언트를 엽니다.
-  2.프라이빗 키 파일을 찾습니다. 이 인스턴스를 시작하는 데 사용되는 키는 wooaham-ec2-key.pem입니다.
+  2.프라이빗 키 파일을 찾습니다. 이 인스턴스를 시작하는 데 사용되는 키는 wooahamkey.pem입니다.
     필요한 경우 이 명령을 실행하여 키를 공개적으로 볼 수 없도록 합니다.
-    chmod 400 wooaham-ec2-key.pem
+    chmod 400 wooahamkey.pem
   3.퍼블릭 DNS을(를) 사용하여 인스턴스에 연결: ** 키페어가 있는 디렉토리로 이동한 후에 다음 명령어 실행
-    ec2-3-35-134-157.ap-northeast-2.compute.amazonaws.com
-    ssh -i "wooaham-ec2-key.pem" ec2-user@ec2-3-35-134-157.ap-northeast-2.compute.amazonaws.com
+    ec2-3-34-131-126.ap-northeast-2.compute.amazonaws.com
+    ssh -i "wooahamkey.pem" ec2-user@ec2-3-34-131-126.ap-northeast-2.compute.amazonaws.com
  ```
 
 ## 서버 배포(AWS EC2내에서 실행)
@@ -69,19 +68,19 @@ sudo chmod 777 ./gradlew && ./gradlew build
 cd build/libs && ls
 ```
 보이는 파일중
-ㅁㅁㅁㅁ-0.0.1-SNAPSHOT-plain.jar  ㅁㅁㅁㅁ-0.0.1-SNAPSHOT.jar 
+wooaham_server-0.0.1-SNAPSHOT-plain.jar  wooaham_server-0.0.1-SNAPSHOT.jar 
 둘중 뒤에 plain 없는 .jar 실행
 
 
 # RUN SERVER
 **1. 포그라운드 (터미널 닫으면 서버 닫힘)**
 ```
-java -jar ㅁㅁㅁㅁ-0.0.1-SNAPSHOT.jar
+java -jar wooaham_server-0.0.1-SNAPSHOT.jar
 ```
 **2. 백그라운드 (터미널 닫아도 서버 유지)**
 **- 실행**
 ```
-nohup java -jar build/libs/ㅁㅁㅁㅁ-0.0.1-SNAPSHOT.jar &
+nohup java -jar build/libs/wooaham_server-0.0.1-SNAPSHOT.jar &
 ```
 - nohup은 터미널을 꺼도 애플리케이션이 꺼지지 않도록 하는 명령어
 - &는 애플리케이션이 백그라운드에서 돌아갈 수 있도록 하는 명령어
