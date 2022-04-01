@@ -4,11 +4,11 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-@Getter
 @Entity
+@Getter
 public class Alarm {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
+    @Column(name = "alarm_id")
     private Long id;
 
     private String title;
