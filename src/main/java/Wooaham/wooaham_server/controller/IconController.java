@@ -1,6 +1,8 @@
 package Wooaham.wooaham_server.controller;
 
+import Wooaham.wooaham_server.dto.IconDto;
 import Wooaham.wooaham_server.dto.UserDto;
+import Wooaham.wooaham_server.service.IconService;
 import Wooaham.wooaham_server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,21 +14,21 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/users")
-public class UserController {
-    private UserService userService;
+@RequestMapping("/icons")
+public class IconController {
+    private IconService iconService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public IconController(IconService iconService) {
+        this.iconService = iconService;
     }
 
     @GetMapping
-    public List<UserDto> getUsers(){
-        return userService.getUsers();
+    public List<IconDto> getIcons(){
+        return iconService.getIcons();
     }
 
     @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable(name = "id") Long userId){
-        return userService.getUser(userId);
+    public IconDto getIcon(@PathVariable(name = "id") Long iconId){
+        return iconService.getIcon(iconId);
     }
 }
