@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "user")
 public class User {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
