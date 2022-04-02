@@ -21,7 +21,7 @@ public class User {
     @Column(name = "icon_id")
     private Long iconId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "icon_id", insertable = false, updatable = false)
     private Icon icon;
 

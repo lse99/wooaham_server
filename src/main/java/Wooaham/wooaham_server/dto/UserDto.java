@@ -18,7 +18,7 @@ public class UserDto {
     private Long userId;
 
     @Nullable
-    private Icon icon;
+    private IconDto icon;
 
     private String name;
 
@@ -35,7 +35,7 @@ public class UserDto {
     public static UserDto from(User user){
         return new UserDto(
                 user.getId(),
-                user.getIcon(),
+                IconDto.from(user.getIcon()),
                 user.getName(),
                 user.getEmail(),
                 user.getBirth(),
