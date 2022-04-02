@@ -1,14 +1,12 @@
 package Wooaham.wooaham_server.domain;
 
+import Wooaham.wooaham_server.domain.type.IconType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -31,4 +29,7 @@ public class Icon {
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
+
+    @Enumerated(EnumType.STRING)
+    private IconType type;
 }
