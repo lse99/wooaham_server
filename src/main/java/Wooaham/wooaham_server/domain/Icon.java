@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Icon {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "icon_id", nullable = false)
     private Long iconId;
 
     @Column(name = "icon", nullable = false)
