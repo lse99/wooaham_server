@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -18,10 +19,11 @@ import java.time.LocalDateTime;
 @Table(name = "icon")
 public class Icon {
 
-    @Column(name = "id")
+    @Id
+    @Column(name = "id", nullable = false)
     private Long iconId;
 
-    @Column(name = "icon")
+    @Column(name = "icon", nullable = false)
     private String iconUrl;
 
     @Column(name = "created_at")
