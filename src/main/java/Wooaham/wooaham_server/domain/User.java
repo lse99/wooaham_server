@@ -38,6 +38,7 @@ public class User {
     private String token;
 
     @Column(name = "role")
+    @Enumerated(EnumType.STRING)
     private RoleType role;
 
     @Column(name = "created_at")
