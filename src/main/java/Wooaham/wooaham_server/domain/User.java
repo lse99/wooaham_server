@@ -2,7 +2,6 @@ package Wooaham.wooaham_server.domain;
 
 import Wooaham.wooaham_server.domain.type.RoleType;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
