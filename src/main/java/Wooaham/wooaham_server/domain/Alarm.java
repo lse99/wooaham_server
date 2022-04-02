@@ -22,4 +22,8 @@ public class Alarm {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ICON_ID")
+    private Icon icon;
+
 }

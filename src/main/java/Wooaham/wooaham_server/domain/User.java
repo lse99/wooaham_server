@@ -6,6 +6,8 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -18,10 +20,7 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "icon_id")
-    private Long iconId;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon_id", insertable = false, updatable = false)
     private Icon icon;
 
@@ -46,6 +45,9 @@ public class User {
 
     @Column(name = "update_at")
     private LocalDateTime updateAt;
+
+    @OneToMany(mappedBy = "user")
+    private List<Alarm> alarms = new ArrayList<>();
 
 }
 
