@@ -1,6 +1,7 @@
-package Wooaham.wooaham_server.domain;
+package Wooaham.wooaham_server.domain.user;
 
-import Wooaham.wooaham_server.domain.type.RoleType;
+import Wooaham.wooaham_server.domain.Alarm;
+import Wooaham.wooaham_server.domain.Icon;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -14,6 +15,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "role")
 @Table(name = "user")
 public class User {
     @Id
@@ -35,10 +38,6 @@ public class User {
 
     @Column(name = "token", nullable = false)
     private String token;
-
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private RoleType role;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

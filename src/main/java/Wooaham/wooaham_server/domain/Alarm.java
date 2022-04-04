@@ -1,5 +1,6 @@
 package Wooaham.wooaham_server.domain;
 
+import Wooaham.wooaham_server.domain.user.User;
 import lombok.Getter;
 
 import javax.persistence.*;
