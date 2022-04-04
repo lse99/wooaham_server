@@ -1,6 +1,6 @@
 package Wooaham.wooaham_server.repository;
 
-import Wooaham.wooaham_server.domain.User;
+import Wooaham.wooaham_server.domain.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
