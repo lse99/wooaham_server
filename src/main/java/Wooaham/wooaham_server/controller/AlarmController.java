@@ -34,4 +34,10 @@ public class AlarmController {
         return ApiResponse.success(null);
     }
 
+    @PostMapping("/enable/{alarmId}")
+    public ApiResponse turnAlarmOnOff(@RequestBody AlarmRequest req, @PathVariable Long alarmId){
+        return ApiResponse.success(alarmService.turnAlarmOnOff(alarmId, req));
+    }
+
+
 }

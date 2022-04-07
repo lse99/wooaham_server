@@ -54,12 +54,13 @@ public class Alarm {
     }
 
     public void updateAlarm(String title, Integer hour, Integer minute,
-                            Integer daysOfWeek, Boolean before10min) {
+                            Integer daysOfWeek, Boolean before10min, Icon icon) {
         this.title = title;
         this.hour = hour;
         this.minute = minute;
         this.daysOfWeek = daysOfWeek;
         this.before10min = before10min;
+        this.icon = icon;
     }
 
     public void turnAlarmOnOff(boolean enabled){
