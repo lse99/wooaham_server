@@ -23,6 +23,7 @@ public enum ErrorCode {
     NOTFOUND("NF000", "존재하지 않습니다"),
     NOTFOUND_USER( "NF001", "탈퇴했거나 존재하지 않는 유저입니다"),
     NOTFOUND_ALARM( "NF002", "삭제되었거나 존재하지 않는 알람입니다"),
+    NOTFOUND_ICON( "NF003", "존재하지 않는 아이콘입니다"),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED( "MN000", "Not Allowed Method"),

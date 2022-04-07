@@ -1,7 +1,7 @@
 package Wooaham.wooaham_server.dto;
 
 import Wooaham.wooaham_server.domain.user.User;
-import Wooaham.wooaham_server.domain.type.RoleType;
+//import Wooaham.wooaham_server.domain.type.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class UserDto {
 
     private String token;
 
-    private RoleType role;
+    //private RoleType role;
 
     private LocalDateTime createdAt;
 
@@ -39,7 +39,7 @@ public class UserDto {
                 user.getEmail(),
                 user.getBirth(),
                 user.getToken(),
-                user.getRole(),
+                //user.getRole(),
                 user.getCreatedAt()
         );
     }
