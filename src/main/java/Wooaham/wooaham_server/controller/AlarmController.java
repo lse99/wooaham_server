@@ -29,7 +29,7 @@ public class AlarmController {
     }
 
     @DeleteMapping("/{alarmId}")
-    public ApiResponse deleteAlarm(@RequestBody AlarmRequest req, @PathVariable Long alarmId){
+    public ApiResponse deleteAlarm(@PathVariable Long alarmId){
         alarmService.deleteAlarm(alarmId);
         return ApiResponse.success(null);
     }
