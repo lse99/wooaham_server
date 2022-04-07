@@ -49,14 +49,20 @@ public class AlarmService {
     public AlarmResponse updateAlarm(Long alarmId, AlarmRequest req){
         Alarm findAlarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ALARM));
+        Icon icon = iconRepository.findById(req.getIconId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ICON));
         findAlarm.updateAlarm(req.getTitle(), req.getHour(), req.getMinute(), req.getDaysOfWeek(),
-                req.getBefore10min());
+                req.getBefore10min(), icon);
         alarmRepository.save(findAlarm);
         return AlarmResponse.of(findAlarm);
     }
 
-    public void turnAlarmOnOff(Long alarmId){
-
+    public Boolean turnAlarmOnOff(Long alarmId, AlarmRequest req){
+        Alarm findAlarm = alarmRepository.findById(alarmId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ALARM));
+        findAlarm.turnAlarmOnOff(req.getEnabled());
+        alarmRepository.save(findAlarm);
+        return findAlarm.getEnabled();
     }
 
     public void deleteAlarm(Long alarmId){
