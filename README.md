@@ -37,16 +37,16 @@ lse0301
     chmod 400 wooahamkey.pem
   3.퍼블릭 DNS을(를) 사용하여 인스턴스에 연결: ** 키페어가 있는 디렉토리로 이동한 후에 다음 명령어 실행
     ec2-3-34-131-126.ap-northeast-2.compute.amazonaws.com
-    ssh -i "wooahamkey.pem" ec2-user@ec2-3-34-131-126.ap-northeast-2.compute.amazonaws.com
+    ssh -i "wooahamkey.pem" ubuntu@ec2-3-34-131-126.ap-northeast-2.compute.amazonaws.com
  ```
 
 ## 서버 배포(AWS EC2내에서 실행)
 **1. 위에 AWS 접속 방법 -- ssh 인증으로 콘솔에 접속**
 
-**2. /home/ubuntu/app/wooaham_server/build/libs로 이동**
+**2. /home/ubuntu/app/wooaham_server/로 이동**
 
 ```
-cd /home/ubuntu/app/wooaham_server/build/libs
+cd wooaham_server/
 ```
 **3. git 에 있는 최신 master 브랜치 반영**
 
