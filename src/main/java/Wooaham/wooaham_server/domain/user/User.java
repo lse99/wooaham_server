@@ -3,7 +3,6 @@ package Wooaham.wooaham_server.domain.user;
 import Wooaham.wooaham_server.domain.Alarm;
 import Wooaham.wooaham_server.domain.Icon;
 import lombok.*;
-
 import javax.persistence.Entity;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @Builder
 @AllArgsConstructor
@@ -22,6 +22,9 @@ public class User {
     @Id
     @Column(name = "user_id", nullable = false)
     private Long id;
+
+    @Column(name = "icon_id")
+    private Long iconId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "icon_id", insertable = false, updatable = false)
@@ -39,11 +42,14 @@ public class User {
     @Column(name = "token", nullable = false)
     private String token;
 
-    @Column(name = "created_at")
+    @Column(name = "role")
+    private String role;
+
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
     private List<Alarm> alarms = new ArrayList<>();

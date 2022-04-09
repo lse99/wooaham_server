@@ -3,10 +3,7 @@ package Wooaham.wooaham_server.controller;
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,5 +25,11 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable(name = "id") Long userId){
         return userService.getUser(userId);
+    }
+
+    @PutMapping("/{id}/icon")
+    public void updateUserIcon(@PathVariable(name = "id") Long userId,
+                           @RequestBody UserDto.UpdateIcon userDto) {
+        userService.updateUserIcon(userId, userDto);
     }
 }

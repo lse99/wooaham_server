@@ -1,7 +1,6 @@
 package Wooaham.wooaham_server.domain.user;
 
 import lombok.Getter;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;

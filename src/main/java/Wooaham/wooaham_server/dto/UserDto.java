@@ -2,8 +2,6 @@ package Wooaham.wooaham_server.dto;
 
 import Wooaham.wooaham_server.domain.user.User;
 import lombok.*;
-import org.jetbrains.annotations.Nullable;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,18 +11,12 @@ import java.time.LocalDateTime;
 public class UserDto {
 
     private Long userId;
-
-    @Nullable
     private IconDto icon;
-
     private String name;
-
     private String email;
-
     private String birth;
-
     private String token;
-
+    private String role;
     private LocalDateTime createdAt;
 
     public static UserDto from(User user){
@@ -35,7 +27,15 @@ public class UserDto {
                 user.getEmail(),
                 user.getBirth(),
                 user.getToken(),
+                user.getRole(),
                 user.getCreatedAt()
         );
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class UpdateIcon {
+        private Long iconId;
     }
 }
