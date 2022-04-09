@@ -3,9 +3,10 @@ package Wooaham.wooaham_server.dto;
 import Wooaham.wooaham_server.domain.Icon;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class IconDto {

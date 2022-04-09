@@ -1,15 +1,13 @@
 package Wooaham.wooaham_server.dto;
 
 import Wooaham.wooaham_server.domain.user.User;
-//import Wooaham.wooaham_server.domain.type.RoleType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 public class UserDto {
@@ -27,8 +25,6 @@ public class UserDto {
 
     private String token;
 
-    //private RoleType role;
-
     private LocalDateTime createdAt;
 
     public static UserDto from(User user){
@@ -39,7 +35,6 @@ public class UserDto {
                 user.getEmail(),
                 user.getBirth(),
                 user.getToken(),
-                //user.getRole(),
                 user.getCreatedAt()
         );
     }
