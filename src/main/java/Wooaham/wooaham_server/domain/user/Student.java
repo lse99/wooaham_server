@@ -11,9 +11,9 @@ import javax.persistence.ManyToOne;
 public class Student extends User{
     private String classCode;
     private String schoolName;
-    private int grade;
-    private int class_num;
-    private int phoneUsageTime;
+    private Integer grade;
+    private Integer class_num;
+    private Integer phoneUsageTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")

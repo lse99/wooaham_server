@@ -8,6 +8,6 @@ import javax.persistence.Entity;
 public class Teacher extends User{
     private String classCode;
     private String schoolName;
-    private int grade;
-    private int class_num;
+    private Integer grade;
+    private Integer class_num;
 }
