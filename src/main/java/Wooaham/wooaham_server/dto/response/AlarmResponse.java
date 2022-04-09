@@ -13,7 +13,7 @@ public class AlarmResponse {
     private String title;
     private Integer hour;
     private Integer minute;
-    private Integer daysOfWeek;
+    private String daysOfWeek;
     private Boolean enabled;
     private Boolean before10min;
 
