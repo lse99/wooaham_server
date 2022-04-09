@@ -45,6 +45,9 @@ public class User {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -52,7 +55,12 @@ public class User {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Alarm> alarms = new ArrayList<>();
+
+    public Boolean isActivated(){
+        return this.deletedAt == null;
+    }
 
 }
 

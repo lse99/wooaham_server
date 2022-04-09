@@ -7,6 +7,10 @@ import Wooaham.wooaham_server.repository.IconRepository;
 import Wooaham.wooaham_server.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +27,7 @@ public class UserService {
 
     public List<UserDto> getUsers(){
         return userRepository.findAll().stream()
+                .filter(User::isActivated)
                 .map(UserDto::from)
                 .collect(Collectors.toList());
     }
@@ -38,6 +43,13 @@ public class UserService {
         Icon icon = iconRepository.findById(userDto.getIconId()).orElseThrow();
 
         user.setIconId(icon.getIconId());
+        userRepository.save(user);
+    }
+
+    public void deleteUser(Long userId){
+        User user = userRepository.findById(userId).orElseThrow();
+
+        user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
     }
 }

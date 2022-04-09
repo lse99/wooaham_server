@@ -18,6 +18,7 @@ public class UserDto {
     private String token;
     private String role;
     private LocalDateTime createdAt;
+    private LocalDateTime deletedAt;
 
     public static UserDto from(User user){
         return new UserDto(
@@ -28,7 +29,8 @@ public class UserDto {
                 user.getBirth(),
                 user.getToken(),
                 user.getRole(),
-                user.getCreatedAt()
+                user.getCreatedAt(),
+                user.getDeletedAt()
         );
     }
 

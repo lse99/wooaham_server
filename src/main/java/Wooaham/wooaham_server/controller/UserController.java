@@ -32,4 +32,9 @@ public class UserController {
                            @RequestBody UserDto.UpdateIcon userDto) {
         userService.updateUserIcon(userId, userDto);
     }
+
+    @PutMapping("/{id}")
+    public void deleteUser(@PathVariable(name = "id") Long userId){
+        userService.deleteUser(userId);
+    }
 }
