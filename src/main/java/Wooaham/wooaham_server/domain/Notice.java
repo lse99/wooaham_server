@@ -1,6 +1,6 @@
 package Wooaham.wooaham_server.domain;
 
-import Wooaham.wooaham_server.domain.user.User;
+import Wooaham.wooaham_server.domain.user.Teacher;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,7 +17,6 @@ public class Notice {
 
     private String title;
     private String contents;
-    private String classCode;
 
     private LocalDateTime createdAt;
     private LocalDateTime updateAt;
@@ -25,5 +24,5 @@ public class Notice {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
-    private User user;
+    private Teacher user;
 }
