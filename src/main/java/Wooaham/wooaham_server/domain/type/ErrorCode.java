@@ -24,6 +24,9 @@ public enum ErrorCode {
     NOTFOUND_USER( "NF001", "탈퇴했거나 존재하지 않는 유저입니다"),
     NOTFOUND_ALARM( "NF002", "삭제되었거나 존재하지 않는 알람입니다"),
     NOTFOUND_ICON( "NF003", "존재하지 않는 아이콘입니다"),
+    NOTFOUND_NOTICE( "NF004", "존재하지 않는 공지사항입니다"),
+    NOTFOUND_TEACHER("NF005", "교사 권한이 없거나 탈퇴한 유저입니다"),
+
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED( "MN000", "Not Allowed Method"),

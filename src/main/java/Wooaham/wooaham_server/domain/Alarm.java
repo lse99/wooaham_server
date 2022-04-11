@@ -32,7 +32,7 @@ public class Alarm {
     private Icon icon;
 
     private LocalDateTime createdAt;
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     private Alarm(User user, Icon icon, String title, Integer hour, Integer minute,
                  String daysOfWeek, Boolean enabled, Boolean before10min) {
