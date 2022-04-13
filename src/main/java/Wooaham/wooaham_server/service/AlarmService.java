@@ -31,9 +31,10 @@ public class AlarmService {
     }
 
     @Transactional(readOnly = true)
-    public Alarm findOne(Long alarmId){
-        return alarmRepository.findById(alarmId)
+    public AlarmResponse findOne(Long alarmId){
+        Alarm findAlarm = alarmRepository.findById(alarmId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ALARM));
+        return AlarmResponse.of(findAlarm);
     }
 
     public Long addAlarm(Long userId, AlarmRequest req){
@@ -51,8 +52,8 @@ public class AlarmService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ALARM));
         Icon icon = iconRepository.findById(req.getIconId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ICON));
-        findAlarm.updateAlarm(req.getTitle(), req.getHour(), req.getMinute(), req.getDaysOfWeek(),
-                req.getBefore10min(), icon);
+        findAlarm.updateAlarm(req.getTitle(), req.getHour(), req.getMinute(), req.getAmpm(),
+                req.getDaysOfWeek(), req.getBefore10min(), icon);
         alarmRepository.save(findAlarm);
         return AlarmResponse.of(findAlarm);
     }

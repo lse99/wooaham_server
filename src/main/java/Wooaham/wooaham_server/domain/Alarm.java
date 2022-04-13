@@ -19,6 +19,7 @@ public class Alarm {
     private String title;
     private Integer hour;
     private Integer minute;
+    private String ampm;
     private String daysOfWeek;
     private Boolean enabled;
     private Boolean before10min;
@@ -35,12 +36,13 @@ public class Alarm {
     private LocalDateTime updatedAt;
 
     private Alarm(User user, Icon icon, String title, Integer hour, Integer minute,
-                 String daysOfWeek, Boolean enabled, Boolean before10min) {
+                 String ampm, String daysOfWeek, Boolean enabled, Boolean before10min) {
         this.user = user;
         this.icon = icon;
         this.title = title;
         this.hour = hour;
         this.minute = minute;
+        this.ampm = ampm;
         this.daysOfWeek = daysOfWeek;
         this.enabled = enabled;
         this.before10min = before10min;
@@ -48,16 +50,17 @@ public class Alarm {
     }
 
     public static Alarm createAlarm(User user, Icon icon, String title, Integer hour, Integer minute,
-                                    String daysOfWeek, Boolean enabled, Boolean before10min){
-        Alarm alarm = new Alarm(user, icon, title, hour, minute, daysOfWeek, enabled, before10min);
+                                    String ampm, String daysOfWeek, Boolean enabled, Boolean before10min){
+        Alarm alarm = new Alarm(user, icon, title, hour, minute, ampm, daysOfWeek, enabled, before10min);
         return alarm;
     }
 
-    public void updateAlarm(String title, Integer hour, Integer minute,
+    public void updateAlarm(String title, Integer hour, Integer minute, String ampm,
                             String daysOfWeek, Boolean before10min, Icon icon) {
         this.title = title;
         this.hour = hour;
         this.minute = minute;
+        this.ampm = ampm;
         this.daysOfWeek = daysOfWeek;
         this.before10min = before10min;
         this.icon = icon;
