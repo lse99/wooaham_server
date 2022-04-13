@@ -20,6 +20,7 @@ public class Notice {
     private String title;
     private String contents;
 
+    //TODO created_at, updated_at 처리 (notice)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

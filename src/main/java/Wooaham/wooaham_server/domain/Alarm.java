@@ -32,6 +32,7 @@ public class Alarm {
     @JoinColumn(name = "ICON_ID")
     private Icon icon;
 
+    //TODO created_at, updated_at 처리 (notice)
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
