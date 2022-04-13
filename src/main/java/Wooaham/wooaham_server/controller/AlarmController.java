@@ -18,6 +18,11 @@ public class AlarmController {
         return ApiResponse.success(alarmService.findAlarms(userId));
     }
 
+    @GetMapping("/details")
+    public ApiResponse getAlarmDetail(@RequestParam Long alarmId){
+        return ApiResponse.success(alarmService.findOne(alarmId));
+    }
+
     @PostMapping("/{userId}")
     public ApiResponse addAlarm(@RequestBody AlarmRequest req, @PathVariable Long userId){
         return ApiResponse.success(alarmService.addAlarm(userId, req));
