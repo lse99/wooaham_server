@@ -26,6 +26,7 @@ public enum ErrorCode {
     NOTFOUND_ICON( "NF003", "존재하지 않는 아이콘입니다"),
     NOTFOUND_NOTICE( "NF004", "존재하지 않는 공지사항입니다"),
     NOTFOUND_TEACHER("NF005", "교사 권한이 없거나 탈퇴한 유저입니다"),
+    NOTFOUND_PARENT("NF006", "부모 권한이 없거나 탈퇴한 유저입니다"),
 
 
     // 405 Method Not Allowed
@@ -39,6 +40,7 @@ public enum ErrorCode {
     CONFLICT_USER("CF001", "이미 해당 계정으로 회원가입되었습니다\n로그인 해주세요"),
     CONFLICT_STUDENT("CF002", "이미 가입한 학생입니다\n학교 정보를 새로 입력해주세요"),
     CONFLICT_TEACHER("CF002", "이미 가입한 교사입니다\n교사인증을 다시 시도해주세요"),
+    CONFLICT_READER("CF003", "이미 읽음 표시한 글입니다"),
 
     // 500 Internal Server Exception
     INTERNAL_SERVER("IS000", "예상치 못한 에러가 발생하였습니다.\n잠시 후 다시 시도해주세요!"),
