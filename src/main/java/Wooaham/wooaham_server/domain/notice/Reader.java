@@ -25,6 +25,7 @@ public class Reader {
     public Reader(Notice notice, Parent parent){
         this.notice = notice;
         this.parent = parent;
+        notice.getReaders().add(this);
     }
 
     public static Reader of(Notice notice, Parent parent){

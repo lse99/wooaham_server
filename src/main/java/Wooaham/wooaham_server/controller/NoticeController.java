@@ -17,35 +17,36 @@ public class NoticeController {
         return ApiResponse.success(noticeService.findNotices(classCode));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{noticeId}")
     public ApiResponse getNoticeDetail(@PathVariable Long noticeId){
         return ApiResponse.success(noticeService.findOne(noticeId));
     }
 
-    @GetMapping("/{id}/reading")
+    @GetMapping("/{noticeId}/reading")
     public ApiResponse getNoticeReaders(@PathVariable Long noticeId){
-        return null;
+        return ApiResponse.success(noticeService.findReaders(noticeId));
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/{userId}")
     public ApiResponse addNotice(@RequestBody NoticeRequest req, @PathVariable Long userId){
         return ApiResponse.success(noticeService.addNotice(userId, req));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{noticeId}")
     public ApiResponse updateNotice(@RequestBody NoticeRequest req, @PathVariable Long noticeId){
         return ApiResponse.success(noticeService.updateNotice(noticeId, req));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{noticeId}")
     public ApiResponse deleteNotice(@PathVariable Long noticeId){
         noticeService.deleteNotice(noticeId);
-        return null;
+        return ApiResponse.success(null);
     }
 
-    @PostMapping("/{id}/reading")
-    public ApiResponse checkNoticeRead(@PathVariable Long noticeId) {
-        return null;
+    @PostMapping("/{noticeId}/reading")
+    public ApiResponse checkNoticeRead(@PathVariable Long noticeId, @RequestParam Long userId) {
+        noticeService.checkReading(noticeId, userId);
+        return ApiResponse.success(null);
     }
 
 }

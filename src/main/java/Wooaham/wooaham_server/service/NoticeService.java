@@ -8,13 +8,12 @@ import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Teacher;
 import Wooaham.wooaham_server.dto.request.NoticeRequest;
 import Wooaham.wooaham_server.dto.response.NoticeResponse;
-import Wooaham.wooaham_server.repository.NoticeRepository;
-import Wooaham.wooaham_server.repository.ReaderRepository;
-import Wooaham.wooaham_server.repository.TeacherRepository;
+import Wooaham.wooaham_server.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +22,8 @@ import java.util.List;
 public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final TeacherRepository teacherRepository;
+    private final ParentRepository parentRepository;
+    private final StudentRepository studentRepository;
     private final ReaderRepository readerRepository;
 
     @Transactional(readOnly = true)
@@ -31,9 +32,10 @@ public class NoticeService {
     }
 
     @Transactional(readOnly = true)
-    public Notice findOne(Long noticeId){
-        return noticeRepository.findById(noticeId)
+    public NoticeResponse findOne(Long noticeId){
+        Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
+        return NoticeResponse.of(findNotice);
     }
 
     public Long addNotice(Long userId, NoticeRequest req){
@@ -67,16 +69,29 @@ public class NoticeService {
         noticeRepository.delete(findNotice);
     }
 
-    public void findReaders(Long noticeId, Long parentId){
+    public List<String> findReaders(Long noticeId){
+        List<String> ret = new ArrayList<>();
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
-
+        List<Reader> readers = findNotice.getReaders();
+        for(Reader r:readers){
+            ret.add(studentRepository.findByClassCodeAndParent(r.getNotice().getUser().getClassCode(),
+                    r.getParent()).getName() + " 부모님");
+        }
+        return ret;
     }
+
 
     public void checkReading(Long noticeId, Long parentId){
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
-        //Parent
-    }
+        Parent user = parentRepository.findById(parentId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
 
+        if (readerRepository.findByNoticeAndParent(findNotice, user) == null) {
+            readerRepository.save(Reader.of(findNotice, user));
+        } else {
+            throw new BaseException(ErrorCode.CONFLICT_READER);
+        }
+    }
 }
