@@ -25,6 +25,7 @@ public class AlarmService {
     private final UserRepository userRepository;
     private final IconRepository iconRepository;
 
+    //TODO userId 받는 것들 - user token으로 id 없이 바로 받을지 userId로 받을지 FE랑 상의해서 결정
     @Transactional(readOnly = true)
     public List<AlarmResponse> findAlarms(Long userId){
         return alarmRepository.findAllByUserId(userId);

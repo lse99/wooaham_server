@@ -38,6 +38,7 @@ public class NoticeService {
         return NoticeResponse.of(findNotice);
     }
 
+    //TODO userId 받는 것들 - user token으로 id 없이 바로 받을지 userId로 받을지 FE랑 상의해서 결정
     public Long addNotice(Long userId, NoticeRequest req){
         Teacher user = teacherRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
