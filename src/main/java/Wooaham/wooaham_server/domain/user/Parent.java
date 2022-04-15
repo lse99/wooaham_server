@@ -1,6 +1,8 @@
 package Wooaham.wooaham_server.domain.user;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
 public class Parent {
     @Id @GeneratedValue
     private Long id;

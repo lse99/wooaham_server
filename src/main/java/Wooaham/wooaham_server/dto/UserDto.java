@@ -48,4 +48,11 @@ public class UserDto {
     public static class RegisterRole {
         private UserType role;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class LikeParentStudent {
+        private Long parentId;
+    }
 }

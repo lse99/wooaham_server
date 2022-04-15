@@ -3,12 +3,14 @@ package Wooaham.wooaham_server.domain.notice;
 import Wooaham.wooaham_server.domain.user.Parent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Reader {
     @Id @GeneratedValue

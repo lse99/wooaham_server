@@ -64,6 +64,14 @@ public class UserService {
         }
     }
 
+    public void linkParentStudent(Long userId, UserDto.LikeParentStudent userDto){
+        Student student = studentRepository.findByUserId(userId).orElseThrow();
+        Parent parent = parentRepository.findById(userDto.getParentId()).orElseThrow();
+
+        student.setParent(parent);
+        studentRepository.save(student);
+    }
+
     public void updateUserIcon(Long userId, UserDto.UpdateIcon userDto){
         User user = userRepository.findById(userId).orElseThrow();
         Icon icon = iconRepository.findById(userDto.getIconId()).orElseThrow();

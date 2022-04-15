@@ -33,6 +33,12 @@ public class UserController {
         userService.registerUserRole(userId, userDto);
     }
 
+    @PutMapping("/{id}/link")
+    public void linkParentStudent(@PathVariable(name = "id") Long userId,
+                                  @RequestBody UserDto.LikeParentStudent userDto){
+        userService.linkParentStudent(userId, userDto);
+    }
+
     @PutMapping("/{id}/icon")
     public void updateUserIcon(@PathVariable(name = "id") Long userId,
                            @RequestBody UserDto.UpdateIcon userDto) {
