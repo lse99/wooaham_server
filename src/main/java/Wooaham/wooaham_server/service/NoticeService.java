@@ -40,7 +40,7 @@ public class NoticeService {
 
     //TODO userId 받는 것들 - user token으로 id 없이 바로 받을지 userId로 받을지 FE랑 상의해서 결정
     public Long addNotice(Long userId, NoticeRequest req){
-        Teacher user = teacherRepository.findById(userId)
+        Teacher user = teacherRepository.findByUserId(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
         Notice notice = req.toNotice(user);
         noticeRepository.save(notice);
@@ -76,8 +76,8 @@ public class NoticeService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
         List<Reader> readers = findNotice.getReaders();
         for(Reader r:readers){
-            ret.add(studentRepository.findByClassCodeAndParent(r.getNotice().getUser().getClassCode(),
-                    r.getParent()).getName() + " 부모님");
+            ret.add(studentRepository.findByClassCodeAndParent(r.getNotice().getUser().getClassCode(), r.getParent())
+                    .getUser().getName() + " 부모님");
         }
         return ret;
     }
@@ -86,7 +86,7 @@ public class NoticeService {
     public void checkReading(Long noticeId, Long parentId){
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
-        Parent user = parentRepository.findById(parentId)
+        Parent user = parentRepository.findByUserId(parentId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
 
         if (readerRepository.findByNoticeAndParent(findNotice, user) == null) {

@@ -13,6 +13,6 @@ public class NoticeResponse {
     private String contents;
 
     public static NoticeResponse of(Notice notice){
-        return new NoticeResponse(notice.getId(), notice.getUser().getId(), notice.getTitle(), notice.getContents());
+        return new NoticeResponse(notice.getId(), notice.getUser().getUser().getId(), notice.getTitle(), notice.getContents());
     }
 }

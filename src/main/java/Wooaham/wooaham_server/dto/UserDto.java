@@ -1,5 +1,6 @@
 package Wooaham.wooaham_server.dto;
 
+import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.User;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class UserDto {
     private String email;
     private String birth;
     private String token;
-    private String role;
+    private UserType role;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
