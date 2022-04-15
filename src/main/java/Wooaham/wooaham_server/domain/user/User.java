@@ -2,6 +2,7 @@ package Wooaham.wooaham_server.domain.user;
 
 import Wooaham.wooaham_server.domain.Alarm;
 import Wooaham.wooaham_server.domain.Icon;
+import Wooaham.wooaham_server.domain.type.UserType;
 import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -15,8 +16,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name = "role")
 @Table(name = "user")
 public class User {
     @Id
@@ -42,9 +41,6 @@ public class User {
     @Column(name = "token", nullable = false)
     private String token;
 
-    @Column(name = "role")
-    private String role;
-
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -57,6 +53,18 @@ public class User {
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Alarm> alarms = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private UserType role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Parent> parents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Teacher> teachers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Student> students = new ArrayList<>();
 
     public Boolean isActivated(){
         return this.deletedAt == null;
