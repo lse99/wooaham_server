@@ -40,6 +40,13 @@ public class UserService {
                 .orElseThrow();
     }
 
+    @Transactional(readOnly = true)
+    public List<UserDto.Child> getChildren(Long userId){
+        return studentRepository.findAllByParentId(userId).stream()
+                .map(UserDto.Child::from)
+                .collect(Collectors.toList());
+    }
+
     public void registerUserRole(Long userId, UserDto.RegisterRole userDto){
         UserType role = userDto.getRole();
 

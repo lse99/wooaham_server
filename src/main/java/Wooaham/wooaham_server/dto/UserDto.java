@@ -1,6 +1,7 @@
 package Wooaham.wooaham_server.dto;
 
 import Wooaham.wooaham_server.domain.type.UserType;
+import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.User;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -33,6 +34,22 @@ public class UserDto {
                 user.getCreatedAt(),
                 user.getDeletedAt()
         );
+    }
+
+    @Builder
+    @Getter
+    public static class Child {
+        private Long userId;
+        private Long studentId;
+        private String name;
+
+        public static Child from(Student student){
+            return Child.builder()
+                    .userId(student.getUser().getId())
+                    .studentId(student.getId())
+                    .name(student.getUser().getName())
+                    .build();
+        }
     }
 
     @Getter

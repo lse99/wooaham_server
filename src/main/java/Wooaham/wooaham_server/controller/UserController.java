@@ -27,6 +27,11 @@ public class UserController {
         return userService.getUser(userId);
     }
 
+    @GetMapping("/{id}/children")
+    public List<UserDto.Child> getChildren(@PathVariable(name = "id") Long userId){
+        return userService.getChildren(userId);
+    }
+
     @PutMapping("/{id}/role")
     public void registerUserRole(@PathVariable(name = "id") Long userId,
                                  @RequestBody UserDto.RegisterRole userDto){
