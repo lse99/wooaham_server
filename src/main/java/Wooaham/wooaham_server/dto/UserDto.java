@@ -69,7 +69,15 @@ public class UserDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class LikeParentStudent {
+    public static class Link {
         private Long parentId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChangeLink {
+        private Long studentId;
+    }
+
 }

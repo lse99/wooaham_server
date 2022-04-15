@@ -7,7 +7,6 @@ import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,7 +70,7 @@ public class UserService {
         }
     }
 
-    public void linkParentStudent(Long userId, UserDto.LikeParentStudent userDto){
+    public void link(Long userId, UserDto.Link userDto){
         Student student = studentRepository.findByUserId(userId).orElseThrow();
         Parent parent = parentRepository.findById(userDto.getParentId()).orElseThrow();
 
@@ -79,6 +78,12 @@ public class UserService {
 
         student.setParent(parent);
         studentRepository.save(student);
+    }
+
+    public void changeLink(Long userId, UserDto.ChangeLink userDto){
+        Parent parent = parentRepository.findByUserId(userId).orElseThrow();
+        parent.setPrimaryStudentId(userDto.getStudentId());
+        parentRepository.save(parent);
     }
 
     public void updateUserIcon(Long userId, UserDto.UpdateIcon userDto){

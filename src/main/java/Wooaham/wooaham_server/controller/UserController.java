@@ -39,9 +39,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}/link")
-    public void linkParentStudent(@PathVariable(name = "id") Long userId,
-                                  @RequestBody UserDto.LikeParentStudent userDto){
-        userService.linkParentStudent(userId, userDto);
+    public void link(@PathVariable(name = "id") Long userId,
+                     @RequestBody UserDto.Link userDto){
+        userService.link(userId, userDto);
+    }
+
+    @PutMapping("/{id}/link/change")
+    public void changeLink(@PathVariable(name = "id") Long userId,
+                           @RequestBody UserDto.ChangeLink userDto){
+        userService.changeLink(userId, userDto);
     }
 
     @PutMapping("/{id}/icon")
