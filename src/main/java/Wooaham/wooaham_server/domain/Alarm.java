@@ -17,9 +17,7 @@ public class Alarm {
     private Long id;
 
     private String title;
-    private Integer hour;
-    private Integer minute;
-    private String ampm;
+    private String time;
     private String daysOfWeek;
     private Boolean enabled;
     private Boolean before10min;
@@ -36,32 +34,27 @@ public class Alarm {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private Alarm(User user, Icon icon, String title, Integer hour, Integer minute,
-                 String ampm, String daysOfWeek, Boolean enabled, Boolean before10min) {
+    private Alarm(User user, Icon icon, String title, String time,
+                  String daysOfWeek, Boolean enabled, Boolean before10min) {
         this.user = user;
         this.icon = icon;
         this.title = title;
-        this.hour = hour;
-        this.minute = minute;
-        this.ampm = ampm;
+        this.time = time;
         this.daysOfWeek = daysOfWeek;
         this.enabled = enabled;
         this.before10min = before10min;
         user.getAlarms().add(this);
     }
 
-    public static Alarm createAlarm(User user, Icon icon, String title, Integer hour, Integer minute,
-                                    String ampm, String daysOfWeek, Boolean enabled, Boolean before10min){
-        Alarm alarm = new Alarm(user, icon, title, hour, minute, ampm, daysOfWeek, enabled, before10min);
+    public static Alarm createAlarm(User user, Icon icon, String title, String time,
+                                    String daysOfWeek, Boolean enabled, Boolean before10min){
+        Alarm alarm = new Alarm(user, icon, title, time, daysOfWeek, enabled, before10min);
         return alarm;
     }
 
-    public void updateAlarm(String title, Integer hour, Integer minute, String ampm,
-                            String daysOfWeek, Boolean before10min, Icon icon) {
+    public void updateAlarm(String title, String time, String daysOfWeek, Boolean before10min, Icon icon) {
         this.title = title;
-        this.hour = hour;
-        this.minute = minute;
-        this.ampm = ampm;
+        this.time = time;
         this.daysOfWeek = daysOfWeek;
         this.before10min = before10min;
         this.icon = icon;

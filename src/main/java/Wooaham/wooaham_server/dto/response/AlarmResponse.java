@@ -11,16 +11,13 @@ public class AlarmResponse {
     private Long userId;
     private Long iconId;
     private String title;
-    private Integer hour;
-    private Integer minute;
-    private String ampm;
+    private String time;
     private String daysOfWeek;
     private Boolean enabled;
     private Boolean before10min;
 
     public static AlarmResponse of(Alarm alarm){
         return new AlarmResponse(alarm.getId(), alarm.getUser().getId(), alarm.getIcon().getIconId(), alarm.getTitle(),
-                alarm.getHour(), alarm.getMinute(), alarm.getAmpm(),alarm.getDaysOfWeek(), alarm.getEnabled(),
-                alarm.getBefore10min());
+                alarm.getTime(),alarm.getDaysOfWeek(), alarm.getEnabled(), alarm.getBefore10min());
     }
 }
