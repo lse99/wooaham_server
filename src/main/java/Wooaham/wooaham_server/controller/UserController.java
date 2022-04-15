@@ -27,6 +27,12 @@ public class UserController {
         return userService.getUser(userId);
     }
 
+    @PutMapping("/{id}/role")
+    public void registerUserRole(@PathVariable(name = "id") Long userId,
+                                 @RequestBody UserDto.RegisterRole userDto){
+        userService.registerUserRole(userId, userDto);
+    }
+
     @PutMapping("/{id}/icon")
     public void updateUserIcon(@PathVariable(name = "id") Long userId,
                            @RequestBody UserDto.UpdateIcon userDto) {

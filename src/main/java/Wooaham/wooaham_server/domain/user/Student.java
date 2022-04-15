@@ -23,4 +23,8 @@ public class Student {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_ID")
     private Parent parent;
+
+    public Student(User user){
+        this.user = user;
+    }
 }

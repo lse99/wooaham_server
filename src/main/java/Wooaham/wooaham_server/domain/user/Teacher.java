@@ -19,4 +19,7 @@ public class Teacher {
     @JoinColumn(name = "USER_ID")
     private User user;
 
+    public Teacher(User user){
+        this.user = user;
+    }
 }

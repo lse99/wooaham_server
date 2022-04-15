@@ -41,4 +41,11 @@ public class UserDto {
     public static class UpdateIcon {
         private Long iconId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RegisterRole {
+        private UserType role;
+    }
 }

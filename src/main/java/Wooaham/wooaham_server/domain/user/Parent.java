@@ -18,4 +18,8 @@ public class Parent {
 
     @OneToMany(mappedBy = "parent")
     private List<Student> children = new ArrayList<>();
+
+    public Parent(User user){
+        this.user = user;
+    }
 }

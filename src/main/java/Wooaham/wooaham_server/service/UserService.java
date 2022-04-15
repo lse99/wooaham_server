@@ -1,13 +1,14 @@
 package Wooaham.wooaham_server.service;
 
 import Wooaham.wooaham_server.domain.Icon;
-import Wooaham.wooaham_server.domain.user.User;
+import Wooaham.wooaham_server.domain.type.UserType;
+import Wooaham.wooaham_server.domain.user.*;
 import Wooaham.wooaham_server.dto.UserDto;
-import Wooaham.wooaham_server.repository.IconRepository;
-import Wooaham.wooaham_server.repository.UserRepository;
+import Wooaham.wooaham_server.repository.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -16,15 +17,15 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ParentRepository parentRepository;
+    private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
     private final IconRepository iconRepository;
 
-    public UserService(UserRepository userRepository, IconRepository iconRepository) {
-        this.userRepository = userRepository;
-        this.iconRepository = iconRepository;
-    }
-
+    @Transactional(readOnly = true)
     public List<UserDto> getUsers(){
         return userRepository.findAll().stream()
                 .filter(User::isActivated)
@@ -32,10 +33,35 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public UserDto getUser(Long userId){
         return userRepository.findById(userId)
                 .map(UserDto::from)
                 .orElseThrow();
+    }
+
+    public void registerUserRole(Long userId, UserDto.RegisterRole userDto){
+        UserType role = userDto.getRole();
+
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setRole(role);
+
+        switch (role){
+            case PARENT:
+                Parent parent = new Parent(user);
+                parentRepository.save(parent);
+                break;
+            case TEACHER:
+                Teacher teacher = new Teacher(user);
+                teacherRepository.save(teacher);
+                break;
+            case STUDENT:
+                Student student = new Student(user);
+                studentRepository.save(student);
+                break;
+            default:
+                throw new RuntimeException();
+        }
     }
 
     public void updateUserIcon(Long userId, UserDto.UpdateIcon userDto){
