@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AlarmRequest {
     private String title;
-    private Integer hour;
-    private Integer minute;
-    private String ampm;
+    private String time;
     private String daysOfWeek;
     private Boolean enabled;
     private Boolean before10min;
@@ -23,7 +21,7 @@ public class AlarmRequest {
     private Long iconId;
 
     public Alarm toAlarm(User user, Icon icon) {
-        return Alarm.createAlarm(user, icon, this.title, this.hour, this.minute, this.ampm,
+        return Alarm.createAlarm(user, icon, this.title, this.time,
                 this.daysOfWeek, this.enabled, this.before10min);
     }
 }

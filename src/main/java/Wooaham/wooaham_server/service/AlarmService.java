@@ -53,7 +53,7 @@ public class AlarmService {
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ALARM));
         Icon icon = iconRepository.findById(req.getIconId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ICON));
-        findAlarm.updateAlarm(req.getTitle(), req.getHour(), req.getMinute(), req.getAmpm(),
+        findAlarm.updateAlarm(req.getTitle(), req.getTime(),
                 req.getDaysOfWeek(), req.getBefore10min(), icon);
         alarmRepository.save(findAlarm);
         return AlarmResponse.of(findAlarm);
