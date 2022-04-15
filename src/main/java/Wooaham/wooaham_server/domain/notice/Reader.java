@@ -3,16 +3,22 @@ package Wooaham.wooaham_server.domain.notice;
 import Wooaham.wooaham_server.domain.user.Parent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Reader {
     @Id @GeneratedValue
     @Column(name = "id")
     private Long id;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "NOTICE_ID")

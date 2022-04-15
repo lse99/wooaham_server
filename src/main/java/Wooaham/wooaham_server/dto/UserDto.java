@@ -1,6 +1,7 @@
 package Wooaham.wooaham_server.dto;
 
 import Wooaham.wooaham_server.domain.type.UserType;
+import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.User;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -35,10 +36,48 @@ public class UserDto {
         );
     }
 
+    @Builder
+    @Getter
+    public static class Child {
+        private Long userId;
+        private Long studentId;
+        private String name;
+
+        public static Child from(Student student){
+            return Child.builder()
+                    .userId(student.getUser().getId())
+                    .studentId(student.getId())
+                    .name(student.getUser().getName())
+                    .build();
+        }
+    }
+
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UpdateIcon {
         private Long iconId;
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RegisterRole {
+        private UserType role;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Link {
+        private Long parentId;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ChangeLink {
+        private Long studentId;
+    }
+
 }
