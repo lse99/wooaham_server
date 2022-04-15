@@ -17,6 +17,7 @@ public class Parent {
     @Id @GeneratedValue
     private Long id;
 
+    private Long primaryStudentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

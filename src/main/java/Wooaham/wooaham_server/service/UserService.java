@@ -75,6 +75,8 @@ public class UserService {
         Student student = studentRepository.findByUserId(userId).orElseThrow();
         Parent parent = parentRepository.findById(userDto.getParentId()).orElseThrow();
 
+        if(parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getId());
+
         student.setParent(parent);
         studentRepository.save(student);
     }
