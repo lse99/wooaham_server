@@ -18,6 +18,13 @@ public class ScheduleController {
 
     private String serviceKey = "0695d515ad8d408a8d6d011035f09057";
 
+    public void getTimetable(){
+//        StringBuffer result = new StringBuffer();
+//        try{
+//            String urlstr = "";
+//        }
+
+    /*
     public void getTimetable(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         response.setContentType("text/html; charset=utf-8");
@@ -36,7 +43,7 @@ public class ScheduleController {
         parameter = parameter + "&" + "_type=json";
 
 
-        /*
+
         addr = addr + serviceKey + parameter;
         URL url = new URL(addr);
 
