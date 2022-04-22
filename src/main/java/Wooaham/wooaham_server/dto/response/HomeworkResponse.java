@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class HomeworkResponse {
-    private Long id;
+    private Long homeworkId;
     private Long userId;
     private String title;
     private Boolean checked;

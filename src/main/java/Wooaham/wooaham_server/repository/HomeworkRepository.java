@@ -10,7 +10,5 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface HomeworkRepository extends JpaRepository<Homework, Long> {
-    //@Query("select h from Homework h where h.user.id = :classCode")
-    List<HomeworkResponse> findByUserAndType(Student user, HomeworkType type);
-
+    List<Homework> findByUserAndType(Student user, HomeworkType type);
 }

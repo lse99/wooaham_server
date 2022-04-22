@@ -17,9 +17,9 @@ public class HomeworkRequest {
     private String type;
 
     public Homework toHomework(Student user){
-        if (type == "SCHOOL") {
+        if (this.type.equals("SCHOOL")) {
             return Homework.createSchoolHomework(user, this.title, this.checked);
-        } else if (type == "ACADEMY") {
+        } else if (this.type.equals("ACADEMY")) {
             return Homework.createAcademyHomework(user, this.title, this.checked);
         } else
             throw new BaseException(ErrorCode.NOTFOUND_HOMEWORKTYPE);

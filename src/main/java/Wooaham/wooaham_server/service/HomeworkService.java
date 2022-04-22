@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,14 +27,22 @@ public class HomeworkService {
     public List<HomeworkResponse> findSchoolHomework(Long userId){
         Student user = studentRepository.findByUserId(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
-        return homeworkRepository.findByUserAndType(user, HomeworkType.SCHOOL);
+        List<Homework> hwList = homeworkRepository.findByUserAndType(user, HomeworkType.SCHOOL);
+        List<HomeworkResponse> responses = new ArrayList<>();
+        for (Homework h : hwList)
+            responses.add(HomeworkResponse.of(h));
+        return responses;
     }
 
     @Transactional(readOnly = true)
     public List<HomeworkResponse> findAcademyHomework(Long userId){
         Student user = studentRepository.findByUserId(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
-        return homeworkRepository.findByUserAndType(user, HomeworkType.ACADEMY);
+        List<Homework> hwList = homeworkRepository.findByUserAndType(user, HomeworkType.ACADEMY);
+        List<HomeworkResponse> responses = new ArrayList<>();
+        for (Homework h : hwList)
+            responses.add(HomeworkResponse.of(h));
+        return responses;
     }
 
     public Long addHomework(Long userId, HomeworkRequest req){
