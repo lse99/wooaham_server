@@ -53,18 +53,28 @@ public class HomeworkService {
         return homework.getId();
     }
 
-    public void updateHomework(){
-
+    public HomeworkResponse updateHomework(Long homeworkId, HomeworkRequest req){
+        Homework findHomework = homeworkRepository.findById(homeworkId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_HOMEWORK));
+        if (req.getTitle() == null) {
+            throw new BaseException(ErrorCode.INVALID_MISSING_PARAMETER);
+        } else {
+            findHomework.updateTitle(req.getTitle());
+        }
+        homeworkRepository.save(findHomework);
+        return HomeworkResponse.of(findHomework);
     }
 
-    public void deleteHomework(){
-
+    public void deleteHomework(Long homeworkId){
+        Homework findHomework = homeworkRepository.findById(homeworkId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_HOMEWORK));
+        homeworkRepository.delete(findHomework);
     }
 
-    public void checkHomework(){
-
+    public HomeworkResponse checkHomework(Long homeworkId){
+        Homework findHomework = homeworkRepository.findById(homeworkId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_HOMEWORK));
+        findHomework.updateCheck();
+        return HomeworkResponse.of(findHomework);
     }
-
-
-
 }

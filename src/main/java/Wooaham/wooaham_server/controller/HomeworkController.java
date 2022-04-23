@@ -29,18 +29,17 @@ public class HomeworkController {
 
     @PutMapping("/{hwId}")
     public ApiResponse updateHomework(@RequestBody HomeworkRequest req, @PathVariable Long hwId){
-        return null;
+        return ApiResponse.success(homeworkService.updateHomework(hwId, req));
     }
 
     @DeleteMapping("/{hwId}")
     public ApiResponse deleteHomework(@PathVariable Long hwId){
-        return null;
+        homeworkService.deleteHomework(hwId);
+        return ApiResponse.success(null);
     }
 
     @PostMapping("/check/{hwId}")
-    public ApiResponse checkHomework(@RequestBody HomeworkRequest req, @PathVariable Long hwId){
-        return null;
+    public ApiResponse checkHomework(@PathVariable Long hwId) {
+        return ApiResponse.success(homeworkService.checkHomework(hwId));
     }
-
-
 }
