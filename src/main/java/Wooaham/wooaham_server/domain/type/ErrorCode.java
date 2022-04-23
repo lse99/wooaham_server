@@ -29,7 +29,8 @@ public enum ErrorCode {
     NOTFOUND_NOTICE( "NF004", "존재하지 않는 공지사항입니다"),
     NOTFOUND_TEACHER("NF005", "교사 권한이 없거나 탈퇴한 유저입니다"),
     NOTFOUND_PARENT("NF006", "부모 권한이 없거나 탈퇴한 유저입니다"),
-    NOTFOUND_HOMEWORKTYPE("NF007","존재하지 않는 Type입니다\nType은 대문자로 입력해주세요"),
+    NOTFOUND_STUDENT("NF007", "학생 권한이 없거나 탈퇴한 유저입니다"),
+    NOTFOUND_HOMEWORKTYPE("NF008","존재하지 않는 Type입니다\nType은 대문자로 입력해주세요"),
 
 
     // 405 Method Not Allowed

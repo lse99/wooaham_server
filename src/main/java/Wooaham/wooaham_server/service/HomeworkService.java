@@ -26,7 +26,7 @@ public class HomeworkService {
     @Transactional(readOnly = true)
     public List<HomeworkResponse> findSchoolHomework(Long userId){
         Student user = studentRepository.findByUserId(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
         List<Homework> hwList = homeworkRepository.findByUserAndType(user, HomeworkType.SCHOOL);
         List<HomeworkResponse> responses = new ArrayList<>();
         for (Homework h : hwList)
@@ -37,7 +37,7 @@ public class HomeworkService {
     @Transactional(readOnly = true)
     public List<HomeworkResponse> findAcademyHomework(Long userId){
         Student user = studentRepository.findByUserId(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
         List<Homework> hwList = homeworkRepository.findByUserAndType(user, HomeworkType.ACADEMY);
         List<HomeworkResponse> responses = new ArrayList<>();
         for (Homework h : hwList)
@@ -47,7 +47,7 @@ public class HomeworkService {
 
     public Long addHomework(Long userId, HomeworkRequest req){
         Student user = studentRepository.findByUserId(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
         Homework homework = req.toHomework(user);
         homeworkRepository.save(homework);
         return homework.getId();
