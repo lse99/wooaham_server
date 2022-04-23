@@ -1,5 +1,9 @@
 server:
   port: 9000
+  error:
+    include-exception: true
+    include-message: always
+    include-stacktrace: on_param
 
 spring:
   application:

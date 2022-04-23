@@ -51,7 +51,7 @@ public class NoticeService {
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
         if(req.getTitle()==null && req.getContents()==null){
-            throw new BaseException(ErrorCode.INVALID);
+            throw new BaseException(ErrorCode.INVALID_MISSING_PARAMETER);
         } else if(req.getContents()==null){
             findNotice.updateTitle(req.getTitle());
         } else if(req.getTitle()==null){
