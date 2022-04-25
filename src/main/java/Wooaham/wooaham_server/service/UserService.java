@@ -46,6 +46,12 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public void registerName(Long userId, UserDto.RegisterName userDto){
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setName(userDto.getName());
+        userRepository.save(user);
+    }
+
     public void registerUserRole(Long userId, UserDto.RegisterRole userDto){
         UserType role = userDto.getRole();
 

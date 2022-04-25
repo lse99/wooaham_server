@@ -29,13 +29,13 @@ public class User {
     @JoinColumn(name = "icon_id", insertable = false, updatable = false)
     private Icon icon;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email")
     private String email;
 
-    @Column(name = "birth", nullable = false)
+    @Column(name = "birth")
     private String birth;
 
     @Column(name = "token", nullable = false)
@@ -58,12 +58,15 @@ public class User {
     private UserType role;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Parent> parents = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Teacher> teachers = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Student> students = new ArrayList<>();
 
     public Boolean isActivated(){
