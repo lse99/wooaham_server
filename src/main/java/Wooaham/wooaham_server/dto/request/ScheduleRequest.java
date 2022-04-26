@@ -13,4 +13,7 @@ public class ScheduleRequest {
     private String grade;
     private String class_nm;
 
+    private String startDay;
+    private String endDay;
+
 }
