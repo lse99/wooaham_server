@@ -3,63 +3,51 @@ package Wooaham.wooaham_server.controller;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import org.json.JSONObject;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
+import Wooaham.wooaham_server.dto.request.ScheduleRequest;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class ScheduleController {
 
-    //변수 serviceKey에 인증키를 넣어주고
+    @GetMapping("/info/timetable")
+    public JSONObject getTimetable(@RequestBody ScheduleRequest req) throws IOException, ParseException {
+        StringBuilder result = new StringBuilder();
 
-    private String serviceKey = "0695d515ad8d408a8d6d011035f09057";
+        String urlStr = "https://open.neis.go.kr/hub/elsTimetable?" +
+                "KEY=0695d515ad8d408a8d6d011035f09057" +
+                "&Type=json" +
+                "&pIndex=1&pSize=100" +
+                "&ATPT_OFCDC_SC_CODE=" + req.getSidoCode() +
+                "&SD_SCHUL_CODE=" + req.getSchoolCode() +
+                "&AY=2022&SEM=1" +
+                "&GRADE=" + req.getGrade() +
+                "&CLASS_NM=" + req.getClass_nm() +
+                "&TI_FROM_YMD=20220425" +
+                "&TI_TO_YMD=20220429";
+        URL url = new URL(urlStr);
 
-    public void getTimetable(){
-//        StringBuffer result = new StringBuffer();
-//        try{
-//            String urlstr = "";
-//        }
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
 
-    /*
-    public void getTimetable(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8");
-        response.setContentType("text/html; charset=utf-8");
+        BufferedReader br;
+        br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
 
-        String addr = "http://?ServiceKey=";
-        String serviceKey = "자신의 키값 입력";
-        String parameter = "";
-//        serviceKey = URLEncoder.encode(serviceKey,"utf-8");
-        PrintWriter out = response.getWriter();
-        parameter = parameter + "&" + "areaCode=1";
-        parameter = parameter + "&" + "eventStartDate=20170401";
-        parameter = parameter + "&" + "eventEndDate=20171231";
-        parameter = parameter + "&" + "pageNo=1&numOfRows=10";
-        parameter = parameter + "&" + "MobileOS=ETC";
-        parameter = parameter + "&" + "MobileApp=aa";
-        parameter = parameter + "&" + "_type=json";
+        String returnLine;
 
+        while ((returnLine = br.readLine()) != null) {
+            result.append(returnLine + "\n\r");
+        }
+        urlConnection.disconnect();
 
+        JSONParser parser = new JSONParser();
+        JSONObject obj = (JSONObject) parser.parse(result.toString());
 
-        addr = addr + serviceKey + parameter;
-        URL url = new URL(addr);
-
-        InputStream in = url.openStream();
-        CachedOutputStream bos = new CachedOutputStream();
-        IOUtils.copy(in, bos);
-        in.close();
-        bos.close();
-
-        String data = bos.getOut().toString();
-        out.println(data);
-
-        JSONObject json = new JSONObject();
-        json.put("data", data);
-
-         */
+        return obj;
     }
 }
-
