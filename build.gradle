@@ -29,12 +29,10 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.json:json:20220320'
-	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//implementation 'org.json:json:20220320'
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-
 }
