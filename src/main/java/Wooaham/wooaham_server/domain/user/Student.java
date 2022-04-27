@@ -44,4 +44,10 @@ public class Student {
         this.schoolName = schoolName;
         this.schoolCode = schoolCode;
     }
+
+    public void setClassInfo(Integer grade, Integer classNum){
+        this.grade = grade;
+        this.classNum = classNum;
+        this.classCode = this.schoolCode + "_" + this.grade + "_" + this.classNum;
+    }
 }

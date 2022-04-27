@@ -2,68 +2,49 @@ package Wooaham.wooaham_server.controller;
 
 import Wooaham.wooaham_server.dto.SchoolDto;
 import lombok.extern.slf4j.Slf4j;
-import netscape.javascript.JSObject;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.json.simple.parser.ParseException;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
 
-@Slf4j
 @RestController
-@RequestMapping("/schools")
 public class SchoolController {
 
-    @GetMapping
-    public List<SchoolDto> getSchools() throws Exception {
+    @GetMapping("/schools")
+    public JSONObject getSchools(@RequestBody SchoolDto dto) throws IOException, ParseException{
 
-        StringBuffer result = new StringBuffer();
-        String urlStr = "https://open.neis.go.kr/hub/schoolInfo";
+        StringBuilder result = new StringBuilder();
+
+        String urlStr = "https://open.neis.go.kr/hub/schoolInfo?" +
+                "KEY=6434846502e44fd39ef97ff67f7371d4" +
+                "&Type=json" +
+                "&pIndex=1&pSize=100" +
+                "&SCHUL_NM=" + dto.getSchoolName();
 
         URL url = new URL(urlStr);
 
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
 
-        BufferedReader br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), "UTF-8"));
+        BufferedReader br;
+        br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
 
         String returnLine;
 
         while ((returnLine = br.readLine()) != null) {
-            result.append(returnLine + "\n");
+            result.append(returnLine).append("\n\r");
         }
-
         httpURLConnection.disconnect();
 
-        JSONObject jObj;
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObj = (JSONObject) jsonParser.parse(result.toString());
-        JSONObject parseResponse = (JSONObject) jsonObj.get("schoolInfo");
-        JSONArray array = (JSONArray) parseResponse.get("row");
+        JSONParser parser = new JSONParser();
 
-        List<SchoolDto> result3 = new ArrayList<SchoolDto>();
-
-        for(int i = 0; i < array.length(); i++) {
-            jObj = (JSONObject) array.get(i);
-
-            SchoolDto schoolDto = new SchoolDto(
-                    jObj.get("ATPT_OFCDC_SC_CODE").toString(),
-                    jObj.get("SD_SCHUL_CODE").toString(),
-                    jObj.get("SCHUL_NM").toString()
-            );
-
-            result3.add(schoolDto);
-        }
-
-        return result3;
+        return (JSONObject) parser.parse(result.toString());
     }
 }

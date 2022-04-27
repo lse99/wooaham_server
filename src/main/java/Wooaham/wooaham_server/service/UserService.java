@@ -78,6 +78,30 @@ public class UserService {
         }
     }
 
+    public void registerClass(Long userId, UserDto.RegisterClass userDto){
+        User user = userRepository.findById(userId).orElseThrow();
+
+        switch (user.getRole()){
+            case TEACHER:
+                Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
+                teacher.setClassInfo(
+                        userDto.getGrade(),
+                        userDto.getClassNum()
+                );
+                teacherRepository.save(teacher);
+                break;
+            case STUDENT:
+                Student student = studentRepository.findByUserId(userId).orElseThrow();
+                student.setClassInfo(
+                        userDto.getGrade(),
+                        userDto.getClassNum());
+                studentRepository.save(student);
+                break;
+            default:
+                throw new RuntimeException();
+        }
+    }
+
     public void registerRole(Long userId, UserDto.RegisterRole userDto){
         UserType role = userDto.getRole();
 

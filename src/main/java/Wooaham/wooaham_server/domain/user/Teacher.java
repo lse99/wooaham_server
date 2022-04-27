@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDateTime;
 
 @Entity
@@ -37,5 +38,11 @@ public class Teacher {
         this.officeCode = officeCode;
         this.schoolName = schoolName;
         this.schoolCode = schoolCode;
+    }
+
+    public void setClassInfo(Integer grade, Integer classNum){
+        this.grade = grade;
+        this.classNum = classNum;
+        this.classCode = this.schoolCode + "_" + this.grade + "_" + this.classNum;
     }
 }

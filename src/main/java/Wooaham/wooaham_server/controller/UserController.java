@@ -11,8 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    //commit test
-    private UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -49,6 +48,12 @@ public class UserController {
     public void registerSchool(@PathVariable(name = "id") Long userId,
                                  @RequestBody UserDto.RegisterSchool userDto){
         userService.registerSchool(userId, userDto);
+    }
+
+    @PutMapping("/{id}/school/class")
+    public void registerClass(@PathVariable(name = "id") Long userId,
+                               @RequestBody UserDto.RegisterClass userDto){
+        userService.registerClass(userId, userDto);
     }
 
     @PutMapping("/{id}/link")

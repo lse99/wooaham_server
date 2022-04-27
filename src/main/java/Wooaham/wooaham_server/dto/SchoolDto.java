@@ -1,16 +1,10 @@
 package Wooaham.wooaham_server.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@Setter
-@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class SchoolDto {
-    private String officeCode;
-    private String schoolCode;
     private String schoolName;
 }
