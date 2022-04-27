@@ -17,8 +17,10 @@ public class Student {
     @Id @GeneratedValue
     private Long id;
 
+    private String officeCode; // ATPT_OFCDC_SC_CODE
+    private String schoolName; // SCHUL_NM
+    private String schoolCode; // SD_SCHUL_CODE
     private String classCode;
-    private String schoolName;
     private Integer grade;
     private Integer classNum;
     private Integer phoneUsageTime;
@@ -35,5 +37,11 @@ public class Student {
 
     public Student(User user){
         this.user = user;
+    }
+
+    public void setSchoolInfo(String officeCode, String schoolName, String schoolCode) {
+        this.officeCode = officeCode;
+        this.schoolName = schoolName;
+        this.schoolCode = schoolCode;
     }
 }

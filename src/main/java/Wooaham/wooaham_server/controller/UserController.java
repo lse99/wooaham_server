@@ -39,9 +39,15 @@ public class UserController {
     }
 
     @PutMapping("/{id}/role")
-    public void registerUserRole(@PathVariable(name = "id") Long userId,
+    public void registerRole(@PathVariable(name = "id") Long userId,
                                  @RequestBody UserDto.RegisterRole userDto){
-        userService.registerUserRole(userId, userDto);
+        userService.registerRole(userId, userDto);
+    }
+
+    @PutMapping("/{id}/school")
+    public void registerSchool(@PathVariable(name = "id") Long userId,
+                                 @RequestBody UserDto.RegisterSchool userDto){
+        userService.registerSchool(userId, userDto);
     }
 
     @PutMapping("/{id}/link")

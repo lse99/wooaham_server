@@ -73,6 +73,16 @@ public class UserDto {
         private String name;
     }
 
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RegisterSchool {
+        private String officeCode;
+        private String schoolName;
+        private String schoolCode;
+    }
+
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor

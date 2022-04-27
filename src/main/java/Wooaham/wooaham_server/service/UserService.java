@@ -52,7 +52,33 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void registerUserRole(Long userId, UserDto.RegisterRole userDto){
+    public void registerSchool(Long userId, UserDto.RegisterSchool userDto){
+        User user = userRepository.findById(userId).orElseThrow();
+
+        switch (user.getRole()){
+            case TEACHER:
+                Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
+                teacher.setSchoolInfo(
+                        userDto.getOfficeCode(),
+                        userDto.getSchoolName(),
+                        userDto.getSchoolCode()
+                );
+                teacherRepository.save(teacher);
+                break;
+            case STUDENT:
+                Student student = studentRepository.findByUserId(userId).orElseThrow();
+                student.setSchoolInfo(
+                        userDto.getOfficeCode(),
+                        userDto.getSchoolName(),
+                        userDto.getSchoolCode());
+                studentRepository.save(student);
+                break;
+            default:
+                throw new RuntimeException();
+        }
+    }
+
+    public void registerRole(Long userId, UserDto.RegisterRole userDto){
         UserType role = userDto.getRole();
 
         User user = userRepository.findById(userId).orElseThrow();
