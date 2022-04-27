@@ -1,7 +1,5 @@
 package Wooaham.wooaham_server.controller;
 
-import Wooaham.wooaham_server.dto.SchoolDto;
-import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -18,15 +16,14 @@ import java.nio.charset.StandardCharsets;
 public class SchoolController {
 
     @GetMapping("/schools")
-    public JSONObject getSchools(@RequestBody SchoolDto dto) throws IOException, ParseException{
+    public JSONObject getSchools() throws IOException, ParseException{
 
         StringBuilder result = new StringBuilder();
 
         String urlStr = "https://open.neis.go.kr/hub/schoolInfo?" +
                 "KEY=6434846502e44fd39ef97ff67f7371d4" +
                 "&Type=json" +
-                "&pIndex=1&pSize=100" +
-                "&SCHUL_NM=" + dto.getSchoolName();
+                "&pIndex=1&pSize=100";
 
         URL url = new URL(urlStr);
 
