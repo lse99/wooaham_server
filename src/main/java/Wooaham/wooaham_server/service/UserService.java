@@ -53,7 +53,11 @@ public class UserService {
     }
 
     public void registerName(Long userId, UserDto.RegisterName userDto){
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        //TODO 닉네임 정규표현식 검사 로직 추가
+
         user.setName(userDto.getName());
         userRepository.save(user);
     }

@@ -32,14 +32,14 @@ public class UserController {
         return userService.getChildren(userId);
     }
 
-    @PutMapping("/{id}/name")
-    public void registerName(@PathVariable(name = "id") Long userId,
+    @PutMapping("/{userId}/name")
+    public void registerName(@PathVariable(name = "userId") Long userId,
                                  @RequestBody UserDto.RegisterName userDto){
         userService.registerName(userId, userDto);
     }
 
-    @PutMapping("/{id}/role")
-    public void registerRole(@PathVariable(name = "id") Long userId,
+    @PutMapping("/{userId}/role")
+    public void registerRole(@PathVariable(name = "userId") Long userId,
                                  @RequestBody UserDto.RegisterRole userDto){
         userService.registerRole(userId, userDto);
     }
