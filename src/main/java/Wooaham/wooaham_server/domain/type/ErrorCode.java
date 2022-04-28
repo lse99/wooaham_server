@@ -46,6 +46,7 @@ public enum ErrorCode {
     CONFLICT_STUDENT("CF002", "이미 가입한 학생입니다\n학교 정보를 새로 입력해주세요"),
     CONFLICT_TEACHER("CF002", "이미 가입한 교사입니다\n교사인증을 다시 시도해주세요"),
     CONFLICT_READER("CF003", "이미 읽음 표시한 글입니다"),
+    CONFLICT_USER_DELETED("CF004", "이미 탈퇴한 계정입니다."),
 
     // 500 Internal Server Exception
     INTERNAL_SERVER("IS000", "예상치 못한 에러가 발생하였습니다.\n잠시 후 다시 시도해주세요!"),

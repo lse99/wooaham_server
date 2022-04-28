@@ -8,8 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    @NotNull List<User> findAll();
-
-    @NotNull Optional<User> findById(@NotNull Long id)    ;
 }

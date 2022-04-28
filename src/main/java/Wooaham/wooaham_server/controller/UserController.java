@@ -74,8 +74,8 @@ public class UserController {
         userService.updateUserIcon(userId, userDto);
     }
 
-    @PutMapping("/{id}")
-    public void deleteUser(@PathVariable(name = "id") Long userId){
+    @PutMapping("/{userId}")
+    public void deleteUser(@PathVariable(name = "userId") Long userId){
         userService.deleteUser(userId);
     }
 }

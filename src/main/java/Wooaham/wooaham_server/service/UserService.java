@@ -1,6 +1,8 @@
 package Wooaham.wooaham_server.service;
 
+import Wooaham.wooaham_server.domain.BaseException;
 import Wooaham.wooaham_server.domain.Icon;
+import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.*;
 import Wooaham.wooaham_server.dto.UserDto;
@@ -151,7 +153,10 @@ public class UserService {
     }
 
     public void deleteUser(Long userId){
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        if(user.getDeletedAt() != null) throw new BaseException(ErrorCode.CONFLICT_USER_DELETED);
 
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
