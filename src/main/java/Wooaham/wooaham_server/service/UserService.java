@@ -7,6 +7,7 @@ import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.*;
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.repository.*;
+import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    // TODO QueryDsl 설정 추가, 탈퇴하지 않은 사용자들만 조회하는 함수 정의해서 사용하기.
+
     private final UserRepository userRepository;
     private final ParentRepository parentRepository;
     private final TeacherRepository teacherRepository;
@@ -107,7 +111,11 @@ public class UserService {
     public void registerRole(Long userId, UserDto.RegisterRole userDto){
         UserType role = userDto.getRole();
 
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        if(user.getRole() != null) throw new BaseException(ErrorCode.CONFLICT_USER_ROLE);
+
         user.setRole(role);
 
         switch (role){
@@ -124,7 +132,7 @@ public class UserService {
                 studentRepository.save(student);
                 break;
             default:
-                throw new RuntimeException();
+                throw new BaseException(ErrorCode.INVALID_ROLE_TYPE);
         }
     }
 
@@ -152,11 +160,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
-        if(user.getDeletedAt() != null) throw new BaseException(ErrorCode.CONFLICT_USER_DELETED);
+        if (user.getDeletedAt() != null) throw new BaseException(ErrorCode.CONFLICT_USER_DELETED);
 
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
