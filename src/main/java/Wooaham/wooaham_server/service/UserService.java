@@ -195,8 +195,17 @@ public class UserService {
     }
 
     public void changeLink(Long userId, UserDto.ChangeLink userDto) {
-        Parent parent = parentRepository.findByUserId(userId).orElseThrow();
-        parent.setPrimaryStudentId(userDto.getStudentId());
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Parent parent = parentRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+
+        Student student = studentRepository.findById(userDto.getStudentId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
+        parent.setPrimaryStudentId(student.getId());
         parentRepository.save(parent);
     }
 
