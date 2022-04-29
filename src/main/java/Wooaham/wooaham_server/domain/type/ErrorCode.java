@@ -15,6 +15,7 @@ public enum ErrorCode {
 
     INVALID_AUTH_TOKEN( "BR200", "만료되거나 유효하지 않은 인증 토큰입니다"),
     INVALID_ROLE_TYPE("IV001", "올바르지 않은 권한입니다"),
+    INVALID_ROLE_TYPE_PARENT("IV002", "학교 정보 등록이 불가한 권한입니다"),
 
     // 401 UnAuthorized
     UNAUTHORIZED("UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),

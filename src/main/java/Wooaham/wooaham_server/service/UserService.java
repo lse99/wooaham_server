@@ -72,11 +72,14 @@ public class UserService {
     }
 
     public void registerSchool(Long userId, UserDto.RegisterSchool userDto) {
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
         switch (user.getRole()) {
             case TEACHER:
-                Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
+                Teacher teacher = teacherRepository.findByUserId(userId)
+                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_TEACHER));
+
                 teacher.setSchoolInfo(
                         userDto.getOfficeCode(),
                         userDto.getSchoolName(),
@@ -85,7 +88,9 @@ public class UserService {
                 teacherRepository.save(teacher);
                 break;
             case STUDENT:
-                Student student = studentRepository.findByUserId(userId).orElseThrow();
+                Student student = studentRepository.findByUserId(userId)
+                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
                 student.setSchoolInfo(
                         userDto.getOfficeCode(),
                         userDto.getSchoolName(),
@@ -93,7 +98,7 @@ public class UserService {
                 studentRepository.save(student);
                 break;
             default:
-                throw new RuntimeException();
+                throw new BaseException(ErrorCode.INVALID_ROLE_TYPE_PARENT);
         }
     }
 
