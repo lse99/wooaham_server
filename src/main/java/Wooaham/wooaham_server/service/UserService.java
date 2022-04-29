@@ -30,7 +30,7 @@ public class UserService {
     private final IconRepository iconRepository;
 
     @Transactional(readOnly = true)
-    public List<UserDto> getUsers(){
+    public List<UserDto> getUsers() {
         return userRepository.findAll().stream()
                 .filter(User::isActivated)
                 .map(UserDto::from)
@@ -38,20 +38,30 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto getUser(Long userId){
+    public UserDto getUser(Long userId) {
         return userRepository.findById(userId)
                 .map(UserDto::from)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
     }
 
     @Transactional(readOnly = true)
-    public List<UserDto.Child> getChildren(Long userId){
-        return studentRepository.findAllByParentId(userId).stream()
+    public List<UserDto.Child> getChildren(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Parent parent = parentRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+
+        List<Student> result = studentRepository.findAllByParentId(parent.getId());
+
+        if (result.isEmpty()) throw new BaseException(ErrorCode.NOTFOUND_CHILDREN);
+        return result.stream()
                 .map(UserDto.Child::from)
                 .collect(Collectors.toList());
     }
 
-    public void registerName(Long userId, UserDto.RegisterName userDto){
+    public void registerName(Long userId, UserDto.RegisterName userDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -61,10 +71,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void registerSchool(Long userId, UserDto.RegisterSchool userDto){
+    public void registerSchool(Long userId, UserDto.RegisterSchool userDto) {
         User user = userRepository.findById(userId).orElseThrow();
 
-        switch (user.getRole()){
+        switch (user.getRole()) {
             case TEACHER:
                 Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
                 teacher.setSchoolInfo(
@@ -87,10 +97,10 @@ public class UserService {
         }
     }
 
-    public void registerClass(Long userId, UserDto.RegisterClass userDto){
+    public void registerClass(Long userId, UserDto.RegisterClass userDto) {
         User user = userRepository.findById(userId).orElseThrow();
 
-        switch (user.getRole()){
+        switch (user.getRole()) {
             case TEACHER:
                 Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
                 teacher.setClassInfo(
@@ -111,17 +121,17 @@ public class UserService {
         }
     }
 
-    public void registerRole(Long userId, UserDto.RegisterRole userDto){
+    public void registerRole(Long userId, UserDto.RegisterRole userDto) {
         UserType role = userDto.getRole();
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
-        if(user.getRole() != null) throw new BaseException(ErrorCode.CONFLICT_USER_ROLE);
+        if (user.getRole() != null) throw new BaseException(ErrorCode.CONFLICT_USER_ROLE);
 
         user.setRole(role);
 
-        switch (role){
+        switch (role) {
             case PARENT:
                 Parent parent = new Parent(user);
                 parentRepository.save(parent);
@@ -139,23 +149,23 @@ public class UserService {
         }
     }
 
-    public void link(Long userId, UserDto.Link userDto){
+    public void link(Long userId, UserDto.Link userDto) {
         Student student = studentRepository.findByUserId(userId).orElseThrow();
         Parent parent = parentRepository.findById(userDto.getParentId()).orElseThrow();
 
-        if(parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getId());
+        if (parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getId());
 
         student.setParent(parent);
         studentRepository.save(student);
     }
 
-    public void changeLink(Long userId, UserDto.ChangeLink userDto){
+    public void changeLink(Long userId, UserDto.ChangeLink userDto) {
         Parent parent = parentRepository.findByUserId(userId).orElseThrow();
         parent.setPrimaryStudentId(userDto.getStudentId());
         parentRepository.save(parent);
     }
 
-    public void registerIcon(Long userId, UserDto.RegisterIcon userDto){
+    public void registerIcon(Long userId, UserDto.RegisterIcon userDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
