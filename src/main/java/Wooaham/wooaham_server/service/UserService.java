@@ -42,7 +42,7 @@ public class UserService {
     public UserDto getUser(Long userId){
         return userRepository.findById(userId)
                 .map(UserDto::from)
-                .orElseThrow();
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
     }
 
     @Transactional(readOnly = true)
