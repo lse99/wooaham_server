@@ -91,8 +91,6 @@ public class NoticeService {
 
         if (readerRepository.findByNoticeAndParent(findNotice, user) == null) {
             readerRepository.save(Reader.of(findNotice, user));
-        } else {
-            throw new BaseException(ErrorCode.CONFLICT_READER);
         }
     }
 }
