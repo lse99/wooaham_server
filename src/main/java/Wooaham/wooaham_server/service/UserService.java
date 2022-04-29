@@ -1,6 +1,8 @@
 package Wooaham.wooaham_server.service;
 
+import Wooaham.wooaham_server.domain.BaseException;
 import Wooaham.wooaham_server.domain.Icon;
+import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.*;
 import Wooaham.wooaham_server.dto.UserDto;
@@ -18,6 +20,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+
+    // TODO QueryDsl 설정 추가, 탈퇴하지 않은 사용자들만 조회하는 함수 정의해서 사용하기.
+
     private final UserRepository userRepository;
     private final ParentRepository parentRepository;
     private final TeacherRepository teacherRepository;
@@ -25,7 +30,7 @@ public class UserService {
     private final IconRepository iconRepository;
 
     @Transactional(readOnly = true)
-    public List<UserDto> getUsers(){
+    public List<UserDto> getUsers() {
         return userRepository.findAll().stream()
                 .filter(User::isActivated)
                 .map(UserDto::from)
@@ -33,82 +38,123 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto getUser(Long userId){
+    public UserDto getUser(Long userId) {
         return userRepository.findById(userId)
                 .map(UserDto::from)
-                .orElseThrow();
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
     }
 
     @Transactional(readOnly = true)
-    public List<UserDto.Child> getChildren(Long userId){
-        return studentRepository.findAllByParentId(userId).stream()
+    public List<UserDto.Child> getChildren(Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Parent parent = parentRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+
+        List<Student> result = studentRepository.findAllByParentId(parent.getId());
+
+        if (result.isEmpty()) throw new BaseException(ErrorCode.NOTFOUND_CHILDREN);
+
+        return result.stream()
                 .map(UserDto.Child::from)
                 .collect(Collectors.toList());
     }
 
-    public void registerName(Long userId, UserDto.RegisterName userDto){
-        User user = userRepository.findById(userId).orElseThrow();
+    public void registerName(Long userId, UserDto.RegisterName userDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        //TODO 닉네임 정규표현식 검사 로직 추가
+
         user.setName(userDto.getName());
         userRepository.save(user);
     }
 
-    public void registerSchool(Long userId, UserDto.RegisterSchool userDto){
-        User user = userRepository.findById(userId).orElseThrow();
+    public void registerSchool(Long userId, UserDto.RegisterSchool userDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
-        switch (user.getRole()){
+        switch (user.getRole()) {
             case TEACHER:
-                Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
+                Teacher teacher = teacherRepository.findByUserId(userId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
+
                 teacher.setSchoolInfo(
                         userDto.getOfficeCode(),
                         userDto.getSchoolName(),
                         userDto.getSchoolCode()
                 );
                 teacherRepository.save(teacher);
+
                 break;
+
             case STUDENT:
-                Student student = studentRepository.findByUserId(userId).orElseThrow();
+                Student student = studentRepository.findByUserId(userId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
                 student.setSchoolInfo(
                         userDto.getOfficeCode(),
                         userDto.getSchoolName(),
                         userDto.getSchoolCode());
                 studentRepository.save(student);
+
                 break;
+
             default:
-                throw new RuntimeException();
+                throw new BaseException(ErrorCode.INVALID_ROLE_FOR_SCHOOL);
         }
     }
 
-    public void registerClass(Long userId, UserDto.RegisterClass userDto){
-        User user = userRepository.findById(userId).orElseThrow();
+    public void registerClass(Long userId, UserDto.RegisterClass userDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
-        switch (user.getRole()){
+        switch (user.getRole()) {
             case TEACHER:
-                Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
+                Teacher teacher = teacherRepository.findByUserId(userId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
+
+                if (teacher.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
+
                 teacher.setClassInfo(
                         userDto.getGrade(),
                         userDto.getClassNum()
                 );
                 teacherRepository.save(teacher);
+
                 break;
+
             case STUDENT:
-                Student student = studentRepository.findByUserId(userId).orElseThrow();
+                Student student = studentRepository.findByUserId(userId)
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
+                if (student.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
+
                 student.setClassInfo(
                         userDto.getGrade(),
                         userDto.getClassNum());
                 studentRepository.save(student);
+
                 break;
+
             default:
-                throw new RuntimeException();
+                throw new BaseException(ErrorCode.INVALID_ROLE_FOR_CLASS);
         }
     }
 
-    public void registerRole(Long userId, UserDto.RegisterRole userDto){
+    public void registerRole(Long userId, UserDto.RegisterRole userDto) {
         UserType role = userDto.getRole();
 
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        if (user.getRole() != null) throw new BaseException(ErrorCode.CONFLICT_USER_ROLE);
+
         user.setRole(role);
 
-        switch (role){
+        switch (role) {
             case PARENT:
                 Parent parent = new Parent(user);
                 parentRepository.save(parent);
@@ -122,36 +168,63 @@ public class UserService {
                 studentRepository.save(student);
                 break;
             default:
-                throw new RuntimeException();
+                throw new BaseException(ErrorCode.INVALID_ROLE_TYPE);
         }
     }
 
-    public void link(Long userId, UserDto.Link userDto){
-        Student student = studentRepository.findByUserId(userId).orElseThrow();
-        Parent parent = parentRepository.findById(userDto.getParentId()).orElseThrow();
+    public void registerLink(Long userId, UserDto.RegisterLink userDto) {
 
-        if(parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getId());
+        User user_student = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Student student = studentRepository.findByUserId(user_student.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
+        if(student.getParentId() != null) throw new BaseException(ErrorCode.CONFLICT_LINK);
+
+        User user_parent = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Parent parent = parentRepository.findByUserId(user_parent.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+
+        if (parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getUserId());
 
         student.setParent(parent);
         studentRepository.save(student);
     }
 
-    public void changeLink(Long userId, UserDto.ChangeLink userDto){
-        Parent parent = parentRepository.findByUserId(userId).orElseThrow();
-        parent.setPrimaryStudentId(userDto.getStudentId());
+    public void changeLink(Long userId, UserDto.ChangeLink userDto) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Parent parent = parentRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+
+        Student student = studentRepository.findById(userDto.getStudentId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
+        parent.setPrimaryStudentId(student.getId());
         parentRepository.save(parent);
     }
 
-    public void updateUserIcon(Long userId, UserDto.UpdateIcon userDto){
-        User user = userRepository.findById(userId).orElseThrow();
-        Icon icon = iconRepository.findById(userDto.getIconId()).orElseThrow();
+    public void registerIcon(Long userId, UserDto.RegisterIcon userDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Icon icon = iconRepository.findById(userDto.getIconId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ICON));
 
         user.setIconId(icon.getIconId());
         userRepository.save(user);
     }
 
-    public void deleteUser(Long userId){
-        User user = userRepository.findById(userId).orElseThrow();
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        if (user.getDeletedAt() != null) throw new BaseException(ErrorCode.CONFLICT_USER_DELETED);
 
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);

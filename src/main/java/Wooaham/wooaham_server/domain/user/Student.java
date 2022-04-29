@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 public class Student {
     @Id @GeneratedValue
     private Long id;
-
+    private Long userId;
+    private Long parentId;
     private String officeCode; // ATPT_OFCDC_SC_CODE
     private String schoolName; // SCHUL_NM
     private String schoolCode; // SD_SCHUL_CODE
@@ -28,11 +29,11 @@ public class Student {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_ID")
+    @JoinColumn(name = "parentId", insertable = false, updatable = false)
     private Parent parent;
 
     public Student(User user){

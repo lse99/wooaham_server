@@ -55,7 +55,7 @@ public class UserDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class UpdateIcon {
+    public static class RegisterIcon {
         private Long iconId;
     }
 
@@ -94,8 +94,8 @@ public class UserDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Link {
-        private Long parentId;
+    public static class RegisterLink {
+        private String email;
     }
 
     @Getter

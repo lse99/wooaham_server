@@ -8,9 +8,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IconRepository extends JpaRepository<Icon, Long> {
-
-    @NotNull List<Icon> findAll();
-
-    @NotNull Optional<Icon> findById(@NotNull Long id);
-
 }

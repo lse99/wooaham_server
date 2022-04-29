@@ -22,60 +22,54 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable(name = "id") Long userId){
+    @GetMapping("/{userId}")
+    public UserDto getUser(@PathVariable(name = "userId") Long userId){
         return userService.getUser(userId);
     }
 
-    @GetMapping("/{id}/children")
-    public List<UserDto.Child> getChildren(@PathVariable(name = "id") Long userId){
+    @GetMapping("/{userId}/children")
+    public List<UserDto.Child> getChildren(@PathVariable(name = "userId") Long userId){
         return userService.getChildren(userId);
     }
 
-    @PutMapping("/{id}/name")
-    public void registerName(@PathVariable(name = "id") Long userId,
+    @PutMapping("/{userId}/name")
+    public void registerName(@PathVariable(name = "userId") Long userId,
                                  @RequestBody UserDto.RegisterName userDto){
         userService.registerName(userId, userDto);
     }
 
-    @PutMapping("/{id}/role")
-    public void registerRole(@PathVariable(name = "id") Long userId,
+    @PutMapping("/{userId}/role")
+    public void registerRole(@PathVariable(name = "userId") Long userId,
                                  @RequestBody UserDto.RegisterRole userDto){
         userService.registerRole(userId, userDto);
     }
 
-    @PutMapping("/{id}/school")
-    public void registerSchool(@PathVariable(name = "id") Long userId,
+    @PutMapping("/{userId}/school")
+    public void registerSchool(@PathVariable(name = "userId") Long userId,
                                  @RequestBody UserDto.RegisterSchool userDto){
         userService.registerSchool(userId, userDto);
     }
 
-    @PutMapping("/{id}/school/class")
-    public void registerClass(@PathVariable(name = "id") Long userId,
+    @PutMapping("/{userId}/class")
+    public void registerClass(@PathVariable(name = "userId") Long userId,
                                @RequestBody UserDto.RegisterClass userDto){
         userService.registerClass(userId, userDto);
     }
 
-    @PutMapping("/{id}/link")
-    public void link(@PathVariable(name = "id") Long userId,
-                     @RequestBody UserDto.Link userDto){
-        userService.link(userId, userDto);
+    @PutMapping("/{userId}/link")
+    public void registerLink(@PathVariable(name = "userId") Long userId,
+                     @RequestBody UserDto.RegisterLink userDto){
+        userService.registerLink(userId, userDto);
     }
 
-    @PutMapping("/{id}/link/change")
-    public void changeLink(@PathVariable(name = "id") Long userId,
+    @PutMapping("/{userId}/link/change")
+    public void changeLink(@PathVariable(name = "userId") Long userId,
                            @RequestBody UserDto.ChangeLink userDto){
         userService.changeLink(userId, userDto);
     }
 
-    @PutMapping("/{id}/icon")
-    public void updateUserIcon(@PathVariable(name = "id") Long userId,
-                           @RequestBody UserDto.UpdateIcon userDto) {
-        userService.updateUserIcon(userId, userDto);
-    }
-
-    @PutMapping("/{id}")
-    public void deleteUser(@PathVariable(name = "id") Long userId){
+    @PutMapping("/{userId}")
+    public void deleteUser(@PathVariable(name = "userId") Long userId){
         userService.deleteUser(userId);
     }
 }

@@ -14,6 +14,9 @@ public enum ErrorCode {
     INVALID_MISSING_AUTH_TOKEN("BR101", "인증 토큰을 입력해주세요"),
 
     INVALID_AUTH_TOKEN( "BR200", "만료되거나 유효하지 않은 인증 토큰입니다"),
+    INVALID_ROLE_TYPE("IV001", "올바르지 않은 권한입니다"),
+    INVALID_ROLE_FOR_SCHOOL("IV002", "학교 정보 등록이 불가한 권한입니다"),
+    INVALID_ROLE_FOR_CLASS("IV003", "반 정보 등록이 불가한 권한입니다"),
 
     // 401 UnAuthorized
     UNAUTHORIZED("UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
@@ -32,6 +35,8 @@ public enum ErrorCode {
     NOTFOUND_STUDENT("NF007", "학생 권한이 없거나 탈퇴한 유저입니다"),
     NOTFOUND_HOMEWORKTYPE("NF008","존재하지 않는 Type입니다\nType은 대문자로 입력해주세요"),
     NOTFOUND_HOMEWORK( "NF009", "존재하지 않는 숙제입니다"),
+    NOTFOUND_CHILDREN("NF010", "연결된 자녀가 없습니다"),
+    NOT_FOUND_SCHOOL("NF011", "학교 정보를 등록해주세요"),
 
 
     // 405 Method Not Allowed
@@ -46,15 +51,18 @@ public enum ErrorCode {
     CONFLICT_STUDENT("CF002", "이미 가입한 학생입니다\n학교 정보를 새로 입력해주세요"),
     CONFLICT_TEACHER("CF002", "이미 가입한 교사입니다\n교사인증을 다시 시도해주세요"),
     CONFLICT_READER("CF003", "이미 읽음 표시한 글입니다"),
+    CONFLICT_USER_DELETED("CF004", "이미 탈퇴한 계정입니다"),
+    CONFLICT_USER_ROLE("CF005", "이미 권한이 등록되어 있습니다"),
+    CONFLICT_LINK("CF006", "이미 부모님과 연결되어 있습니다"),
 
     // 500 Internal Server Exception
-    INTERNAL_SERVER("IS000", "예상치 못한 에러가 발생하였습니다.\n잠시 후 다시 시도해주세요!"),
+    INTERNAL_SERVER("IS000", "예상치 못한 에러가 발생하였습니다"),
 
     // 502 Bad Gateway
-    BAD_GATEWAY("BG000", "일시적인 에러가 발생하였습니다.\n잠시 후 다시 시도해주세요!"),
+    BAD_GATEWAY("BG000", "일시적인 에러가 발생하였습니다"),
 
     // 503 Service UnAvailable
-    SERVICE_UNAVAILABLE("SU000", "현재 해당 기능은 점검 중입니다.\n잠시 후 다시 시도해주세요!"),
+    SERVICE_UNAVAILABLE("SU000", "현재 해당 기능은 점검 중입니다"),
     ;
 
     private final String code;
