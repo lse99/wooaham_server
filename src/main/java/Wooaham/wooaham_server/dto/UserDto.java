@@ -94,7 +94,7 @@ public class UserDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Link {
+    public static class RegisterLink {
         private Long parentId;
     }
 

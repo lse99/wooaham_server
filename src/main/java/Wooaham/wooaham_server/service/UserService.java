@@ -171,7 +171,7 @@ public class UserService {
         }
     }
 
-    public void link(Long userId, UserDto.Link userDto) {
+    public void registerLink(Long userId, UserDto.Link userDto) {
         Student student = studentRepository.findByUserId(userId).orElseThrow();
         Parent parent = parentRepository.findById(userDto.getParentId()).orElseThrow();
 
