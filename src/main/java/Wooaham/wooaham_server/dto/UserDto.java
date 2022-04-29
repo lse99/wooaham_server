@@ -55,7 +55,7 @@ public class UserDto {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class UpdateIcon {
+    public static class RegisterIcon {
         private Long iconId;
     }
 

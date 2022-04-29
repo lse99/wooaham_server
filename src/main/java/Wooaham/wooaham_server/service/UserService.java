@@ -7,7 +7,6 @@ import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.*;
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.repository.*;
-import com.sun.xml.bind.v2.TODO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -156,9 +155,12 @@ public class UserService {
         parentRepository.save(parent);
     }
 
-    public void updateUserIcon(Long userId, UserDto.UpdateIcon userDto){
-        User user = userRepository.findById(userId).orElseThrow();
-        Icon icon = iconRepository.findById(userDto.getIconId()).orElseThrow();
+    public void registerIcon(Long userId, UserDto.RegisterIcon userDto){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Icon icon = iconRepository.findById(userDto.getIconId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ICON));
 
         user.setIconId(icon.getIconId());
         userRepository.save(user);

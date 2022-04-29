@@ -69,9 +69,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}/icon")
-    public void updateUserIcon(@PathVariable(name = "id") Long userId,
-                           @RequestBody UserDto.UpdateIcon userDto) {
-        userService.updateUserIcon(userId, userDto);
+    public void registerIcon(@PathVariable(name = "id") Long userId,
+                           @RequestBody UserDto.RegisterIcon userDto) {
+        userService.registerIcon(userId, userDto);
     }
 
     @PutMapping("/{userId}")
