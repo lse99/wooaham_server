@@ -16,13 +16,13 @@ import java.util.List;
 public class Parent {
     @Id @GeneratedValue
     private Long id;
-
+    private Long userId;
     private Long primaryStudentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
     @OneToMany(mappedBy = "parent")

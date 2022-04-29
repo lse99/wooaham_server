@@ -53,6 +53,7 @@ public enum ErrorCode {
     CONFLICT_READER("CF003", "이미 읽음 표시한 글입니다"),
     CONFLICT_USER_DELETED("CF004", "이미 탈퇴한 계정입니다"),
     CONFLICT_USER_ROLE("CF005", "이미 권한이 등록되어 있습니다"),
+    CONFLICT_LINK("CF006", "이미 부모님과 연결되어 있습니다"),
 
     // 500 Internal Server Exception
     INTERNAL_SERVER("IS000", "예상치 못한 에러가 발생하였습니다"),

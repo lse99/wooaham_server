@@ -16,7 +16,7 @@ public class Teacher {
     @Id
     @GeneratedValue
     private Long id;
-
+    private Long userId;
     private String officeCode; // ATPT_OFCDC_SC_CODE
     private String schoolName; // SCHUL_NM
     private String schoolCode; // SD_SCHUL_CODE
@@ -27,7 +27,7 @@ public class Teacher {
     private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "userId", insertable = false, updatable = false)
     private User user;
 
     public Teacher(User user) {

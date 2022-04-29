@@ -56,6 +56,7 @@ public class UserService {
         List<Student> result = studentRepository.findAllByParentId(parent.getId());
 
         if (result.isEmpty()) throw new BaseException(ErrorCode.NOTFOUND_CHILDREN);
+
         return result.stream()
                 .map(UserDto.Child::from)
                 .collect(Collectors.toList());
@@ -78,7 +79,7 @@ public class UserService {
         switch (user.getRole()) {
             case TEACHER:
                 Teacher teacher = teacherRepository.findByUserId(userId)
-                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_TEACHER));
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
 
                 teacher.setSchoolInfo(
                         userDto.getOfficeCode(),
@@ -91,7 +92,7 @@ public class UserService {
 
             case STUDENT:
                 Student student = studentRepository.findByUserId(userId)
-                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
 
                 student.setSchoolInfo(
                         userDto.getOfficeCode(),
@@ -113,9 +114,9 @@ public class UserService {
         switch (user.getRole()) {
             case TEACHER:
                 Teacher teacher = teacherRepository.findByUserId(userId)
-                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_TEACHER));
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
 
-                if(teacher.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
+                if (teacher.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
 
                 teacher.setClassInfo(
                         userDto.getGrade(),
@@ -127,9 +128,9 @@ public class UserService {
 
             case STUDENT:
                 Student student = studentRepository.findByUserId(userId)
-                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+                        .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
 
-                if(student.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
+                if (student.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
 
                 student.setClassInfo(
                         userDto.getGrade(),
@@ -171,11 +172,23 @@ public class UserService {
         }
     }
 
-    public void registerLink(Long userId, UserDto.Link userDto) {
-        Student student = studentRepository.findByUserId(userId).orElseThrow();
-        Parent parent = parentRepository.findById(userDto.getParentId()).orElseThrow();
+    public void registerLink(Long userId, UserDto.RegisterLink userDto) {
 
-        if (parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getId());
+        User user_student = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Student student = studentRepository.findByUserId(user_student.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
+        if(student.getParentId() != null) throw new BaseException(ErrorCode.CONFLICT_LINK);
+
+        User user_parent = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        Parent parent = parentRepository.findByUserId(user_parent.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+
+        if (parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getUserId());
 
         student.setParent(parent);
         studentRepository.save(student);
