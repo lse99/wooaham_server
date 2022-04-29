@@ -86,7 +86,9 @@ public class UserService {
                         userDto.getSchoolCode()
                 );
                 teacherRepository.save(teacher);
+
                 break;
+
             case STUDENT:
                 Student student = studentRepository.findByUserId(userId)
                         .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_STUDENT));
@@ -96,33 +98,48 @@ public class UserService {
                         userDto.getSchoolName(),
                         userDto.getSchoolCode());
                 studentRepository.save(student);
+
                 break;
+
             default:
-                throw new BaseException(ErrorCode.INVALID_ROLE_TYPE_PARENT);
+                throw new BaseException(ErrorCode.INVALID_ROLE_FOR_SCHOOL);
         }
     }
 
     public void registerClass(Long userId, UserDto.RegisterClass userDto) {
-        User user = userRepository.findById(userId).orElseThrow();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
         switch (user.getRole()) {
             case TEACHER:
-                Teacher teacher = teacherRepository.findByUserId(userId).orElseThrow();
+                Teacher teacher = teacherRepository.findByUserId(userId)
+                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_TEACHER));
+
+                if(teacher.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
+
                 teacher.setClassInfo(
                         userDto.getGrade(),
                         userDto.getClassNum()
                 );
                 teacherRepository.save(teacher);
+
                 break;
+
             case STUDENT:
-                Student student = studentRepository.findByUserId(userId).orElseThrow();
+                Student student = studentRepository.findByUserId(userId)
+                        .orElseThrow(()-> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+
+                if(student.getSchoolCode() == null) throw new BaseException(ErrorCode.NOT_FOUND_SCHOOL);
+
                 student.setClassInfo(
                         userDto.getGrade(),
                         userDto.getClassNum());
                 studentRepository.save(student);
+
                 break;
+
             default:
-                throw new RuntimeException();
+                throw new BaseException(ErrorCode.INVALID_ROLE_FOR_CLASS);
         }
     }
 

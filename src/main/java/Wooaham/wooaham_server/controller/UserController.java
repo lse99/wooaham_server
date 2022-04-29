@@ -50,7 +50,7 @@ public class UserController {
         userService.registerSchool(userId, userDto);
     }
 
-    @PutMapping("/{id}/school/class")
+    @PutMapping("/{id}/class")
     public void registerClass(@PathVariable(name = "id") Long userId,
                                @RequestBody UserDto.RegisterClass userDto){
         userService.registerClass(userId, userDto);

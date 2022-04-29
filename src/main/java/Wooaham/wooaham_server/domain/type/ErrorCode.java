@@ -15,7 +15,8 @@ public enum ErrorCode {
 
     INVALID_AUTH_TOKEN( "BR200", "만료되거나 유효하지 않은 인증 토큰입니다"),
     INVALID_ROLE_TYPE("IV001", "올바르지 않은 권한입니다"),
-    INVALID_ROLE_TYPE_PARENT("IV002", "학교 정보 등록이 불가한 권한입니다"),
+    INVALID_ROLE_FOR_SCHOOL("IV002", "학교 정보 등록이 불가한 권한입니다"),
+    INVALID_ROLE_FOR_CLASS("IV003", "반 정보 등록이 불가한 권한입니다"),
 
     // 401 UnAuthorized
     UNAUTHORIZED("UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
@@ -35,6 +36,7 @@ public enum ErrorCode {
     NOTFOUND_HOMEWORKTYPE("NF008","존재하지 않는 Type입니다\nType은 대문자로 입력해주세요"),
     NOTFOUND_HOMEWORK( "NF009", "존재하지 않는 숙제입니다"),
     NOTFOUND_CHILDREN("NF010", "연결된 자녀가 없습니다"),
+    NOT_FOUND_SCHOOL("NF011", "학교 정보를 등록해주세요"),
 
 
     // 405 Method Not Allowed
