@@ -29,7 +29,7 @@ public class Notice {
     @JoinColumn(name = "USER_ID")
     private Teacher user;
 
-    @OneToMany(mappedBy = "notice")
+    @OneToMany(mappedBy = "notice", cascade = CascadeType.ALL)
     private List<Reader> readers = new ArrayList<>();
 
 
