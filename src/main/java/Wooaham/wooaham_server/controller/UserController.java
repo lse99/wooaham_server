@@ -5,6 +5,7 @@ import Wooaham.wooaham_server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j
@@ -18,12 +19,12 @@ public class UserController {
     }
 
     @PostMapping
-    public void registerUser(@RequestBody UserDto.Create userDto){
+    public void registerUser(@RequestBody @Valid UserDto.Create userDto){
         userService.registerUser(userDto);
     }
 
     @GetMapping
-    public Long logIn(@RequestBody UserDto.LogIn userDto){
+    public Long logIn(@RequestBody @Valid UserDto.LogIn userDto){
         return userService.logIn(userDto);
     }
 
@@ -39,7 +40,7 @@ public class UserController {
 
     @PutMapping("/{userId}/password")
     public void changePw(@PathVariable(name = "userId") Long userId,
-                         @RequestBody UserDto.ChangePw userDto){
+                         @RequestBody @Valid UserDto.ChangePw userDto){
         userService.changePw(userId, userDto);
     }
     @PutMapping("/{userId}/name")
