@@ -145,7 +145,7 @@ public class UserService {
                 userRepository.save(user);
             }
         } catch (Exception ignored) {
-            throw new BaseException(ErrorCode.PASSWORD_DECRYPTION_ERROR);
+            throw new BaseException(ErrorCode.PASSWORD_CHANGE_ERROR);
         }
     }
 
