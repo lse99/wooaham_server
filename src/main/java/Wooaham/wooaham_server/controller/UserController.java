@@ -17,9 +17,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping
+    public void registerUser(@RequestBody UserDto.Create userDto){
+        userService.registerUser(userDto);
+    }
+
     @GetMapping
-    public List<UserDto> getUsers(){
-        return userService.getUsers();
+    public Long logIn(@RequestBody UserDto.LogIn userDto){
+        return userService.logIn(userDto);
     }
 
     @GetMapping("/{userId}")
@@ -32,16 +37,15 @@ public class UserController {
         return userService.getChildren(userId);
     }
 
-    @PutMapping("/{userId}/name")
-    public void registerName(@PathVariable(name = "userId") Long userId,
-                                 @RequestBody UserDto.RegisterName userDto){
-        userService.registerName(userId, userDto);
+    @PutMapping("/{userId}/password")
+    public void changePw(@PathVariable(name = "userId") Long userId,
+                         @RequestBody UserDto.ChangePw userDto){
+        userService.changePw(userId, userDto);
     }
-
-    @PutMapping("/{userId}/role")
-    public void registerRole(@PathVariable(name = "userId") Long userId,
-                                 @RequestBody UserDto.RegisterRole userDto){
-        userService.registerRole(userId, userDto);
+    @PutMapping("/{userId}/name")
+    public void changeName(@PathVariable(name = "userId") Long userId,
+                           @RequestBody UserDto.changeName userDto){
+        userService.changeName(userId, userDto);
     }
 
     @PutMapping("/{userId}/school")

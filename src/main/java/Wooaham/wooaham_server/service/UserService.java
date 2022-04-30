@@ -7,6 +7,8 @@ import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.*;
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.repository.*;
+import Wooaham.wooaham_server.utils.AES128;
+import Wooaham.wooaham_server.utils.Secret;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,19 +24,85 @@ import java.util.stream.Collectors;
 public class UserService {
 
     // TODO QueryDsl 설정 추가, 탈퇴하지 않은 사용자들만 조회하는 함수 정의해서 사용하기.
-
     private final UserRepository userRepository;
     private final ParentRepository parentRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final IconRepository iconRepository;
 
-    @Transactional(readOnly = true)
-    public List<UserDto> getUsers() {
-        return userRepository.findAll().stream()
-                .filter(User::isActivated)
-                .map(UserDto::from)
-                .collect(Collectors.toList());
+    public boolean checkEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    @Transactional
+    public void registerRole(User user) {
+        UserType role = user.getRole();
+
+        switch (role) {
+            case PARENT:
+                user.setIconId(1L);
+                userRepository.save(user);
+
+                Parent parent = new Parent(user);
+                parentRepository.save(parent);
+                break;
+            case TEACHER:
+                user.setIconId(2L);
+                userRepository.save(user);
+
+                Teacher teacher = new Teacher(user);
+                teacherRepository.save(teacher);
+                break;
+            case STUDENT:
+                user.setIconId(3L);
+                userRepository.save(user);
+
+                Student student = new Student(user);
+                studentRepository.save(student);
+                break;
+            default:
+                throw new BaseException(ErrorCode.INVALID_ROLE_TYPE);
+        }
+    }
+
+    @Transactional
+    public void registerUser(UserDto.Create userDto) {
+        if (checkEmail(userDto.getEmail())) throw new BaseException(ErrorCode.CONFLICT_USER);
+
+        try {
+            String password = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(userDto.getPassword());
+            userDto.setPassword(password);
+
+            User user = new User(
+                            userDto.getEmail(), password, userDto.getName(), userDto.getBirth(), userDto.getRole()
+                        );
+
+            userRepository.save(user);
+
+            registerRole(user);
+
+        } catch (Exception ignored) {
+            throw new BaseException(ErrorCode.PASSWORD_ENCRYPTION_ERROR);
+        }
+    }
+
+    @Transactional
+    public Long logIn(UserDto.LogIn userDto) {
+        User user = userRepository.findByEmail(userDto.getEmail())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        String password;
+        try {
+            password = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword());
+        } catch (Exception ignored) {
+            throw new BaseException(ErrorCode.PASSWORD_DECRYPTION_ERROR);
+        }
+
+        if (password.equals(userDto.getPassword())) {
+            return user.getId();
+        } else {
+            throw new BaseException(ErrorCode.FAILED_TO_LOGIN);
+        }
     }
 
     @Transactional(readOnly = true)
@@ -62,11 +130,28 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void registerName(Long userId, UserDto.RegisterName userDto) {
+    public void changePw(Long userId, UserDto.ChangePw userDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
-        //TODO 닉네임 정규표현식 검사 로직 추가
+        String currentPw;
+        String newPw;
+        try {
+            currentPw = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword());
+
+            if (currentPw.equals(userDto.getCurrentPw())) {
+                newPw = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(userDto.getNewPw());
+                user.setPassword(newPw);
+                userRepository.save(user);
+            }
+        } catch (Exception ignored) {
+            throw new BaseException(ErrorCode.PASSWORD_DECRYPTION_ERROR);
+        }
+    }
+
+    public void changeName(Long userId, UserDto.changeName userDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
         user.setName(userDto.getName());
         userRepository.save(user);
@@ -144,34 +229,6 @@ public class UserService {
         }
     }
 
-    public void registerRole(Long userId, UserDto.RegisterRole userDto) {
-        UserType role = userDto.getRole();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
-
-        if (user.getRole() != null) throw new BaseException(ErrorCode.CONFLICT_USER_ROLE);
-
-        user.setRole(role);
-
-        switch (role) {
-            case PARENT:
-                Parent parent = new Parent(user);
-                parentRepository.save(parent);
-                break;
-            case TEACHER:
-                Teacher teacher = new Teacher(user);
-                teacherRepository.save(teacher);
-                break;
-            case STUDENT:
-                Student student = new Student(user);
-                studentRepository.save(student);
-                break;
-            default:
-                throw new BaseException(ErrorCode.INVALID_ROLE_TYPE);
-        }
-    }
-
     public void registerLink(Long userId, UserDto.RegisterLink userDto) {
 
         User user_student = userRepository.findById(userId)
@@ -180,7 +237,7 @@ public class UserService {
         Student student = studentRepository.findByUserId(user_student.getId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
 
-        if(student.getParentId() != null) throw new BaseException(ErrorCode.CONFLICT_LINK);
+        if (student.getParentId() != null) throw new BaseException(ErrorCode.CONFLICT_LINK);
 
         User user_parent = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));

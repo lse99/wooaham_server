@@ -37,7 +37,10 @@ public class Student {
     private Parent parent;
 
     public Student(User user){
+        this.userId = user.getId();
         this.user = user;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void setSchoolInfo(String officeCode, String schoolName, String schoolCode) {

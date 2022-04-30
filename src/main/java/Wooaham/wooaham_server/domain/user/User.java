@@ -19,6 +19,7 @@ import java.util.List;
 @Table(name = "user")
 public class User {
     @Id
+    @GeneratedValue
     @Column(name = "user_id", nullable = false)
     private Long id;
 
@@ -29,33 +30,32 @@ public class User {
     @JoinColumn(name = "icon_id", insertable = false, updatable = false)
     private Icon icon;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "birth")
-    private String birth;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @Column(name = "token", nullable = false)
-    private String token;
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "birth", nullable = false)
+    private String birth;
+    @Enumerated(EnumType.STRING)
+    private UserType role;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<Alarm> alarms = new ArrayList<>();
-
-    @Enumerated(EnumType.STRING)
-    private UserType role;
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
@@ -73,5 +73,16 @@ public class User {
         return this.deletedAt == null;
     }
 
+    public User(String email, String password, String name, String birth, UserType role){
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.birth = birth;
+        this.role = role;
+        this.iconId = null;
+        this.deletedAt = null;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
 }
 
