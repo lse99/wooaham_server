@@ -23,7 +23,7 @@ public class UserController {
         userService.registerUser(userDto);
     }
 
-    @GetMapping
+    @GetMapping("/login")
     public Long logIn(@RequestBody @Valid UserDto.LogIn userDto){
         return userService.logIn(userDto);
     }
