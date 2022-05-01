@@ -23,6 +23,9 @@ public enum ErrorCode {
     PASSWORD_ENCRYPTION_ERROR("UA001","비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR("UA002","비밀번호 복호화에 실패하였습니다."),
     FAILED_TO_LOGIN("UA003", "없는 아이디거나 비밀번호가 틀렸습니다."),
+    EMPTY_JWT("UA004", "JWT를 입력해주세요"),
+    INVALID_JWT("UA005","유효하지 않은 JWT입니다"),
+
     // 403 Forbidden
     FORBIDDEN( "FB000", "허용하지 않는 요청입니다"),
 
