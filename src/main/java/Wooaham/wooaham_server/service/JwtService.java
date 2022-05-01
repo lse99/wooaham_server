@@ -3,6 +3,8 @@ package Wooaham.wooaham_server.service;
 import Wooaham.wooaham_server.domain.BaseException;
 import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.type.UserType;
+import Wooaham.wooaham_server.dto.UserDto;
+import Wooaham.wooaham_server.dto.UserDto.*;
 import Wooaham.wooaham_server.utils.Secret;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -24,7 +26,7 @@ public class JwtService {
     @param userIdx
     @return String
      */
-    public String createJwt(int userIdx, UserType role) {
+    public String createJwt(Long userIdx, UserType role) {
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam("type", "jwt")
@@ -42,7 +44,7 @@ public class JwtService {
      */
     public String getJwt() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        return request.getHeader("Bearer ");
+        return request.getHeader("TEST");
     }
 
     /*
@@ -73,15 +75,4 @@ public class JwtService {
                 claims.getBody().get("role", String.class)
         );
     }
-
-    class UserInfo {
-        private Long userId;
-        private UserType role;
-
-        public UserInfo(Long userId, String role) {
-            this.userId = userId;
-            this.role = UserType.valueOf(role);
-        }
-    }
-
 }

@@ -6,6 +6,7 @@ import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.*;
 import Wooaham.wooaham_server.dto.UserDto;
+import Wooaham.wooaham_server.dto.UserDto.*;
 import Wooaham.wooaham_server.repository.*;
 import Wooaham.wooaham_server.utils.AES128;
 import Wooaham.wooaham_server.utils.Secret;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,6 +31,7 @@ public class UserService {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final IconRepository iconRepository;
+    private final JwtService jwtService;
 
     public boolean checkEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
@@ -87,7 +90,7 @@ public class UserService {
     }
 
     @Transactional
-    public Long logIn(UserDto.LogIn userDto) {
+    public LogInRes logIn(UserDto.LogInReq userDto) {
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -99,7 +102,12 @@ public class UserService {
         }
 
         if (password.equals(userDto.getPassword())) {
-            return user.getId();
+            Long userId = user.getId();
+            UserType role = user.getRole();
+            String jwt = jwtService.createJwt(userId, role);
+
+            return new LogInRes(userId, jwt);
+
         } else {
             throw new BaseException(ErrorCode.FAILED_TO_LOGIN);
         }
@@ -107,6 +115,12 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserDto getUser(Long userId) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
         return userRepository.findById(userId)
                 .map(UserDto::from)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
