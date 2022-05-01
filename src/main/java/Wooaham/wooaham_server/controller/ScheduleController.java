@@ -18,6 +18,7 @@ import Wooaham.wooaham_server.repository.StudentRepository;
 import Wooaham.wooaham_server.repository.TeacherRepository;
 import Wooaham.wooaham_server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -142,6 +143,24 @@ public class ScheduleController {
 
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(result.toString());
+
+        JSONArray mealInfo = (JSONArray) obj.get("mealServiceDietInfo");
+        JSONObject first = (JSONObject) mealInfo.get(0);
+        JSONArray head = (JSONArray) first.get("head");
+        JSONObject second = (JSONObject) head.get(1);
+        JSONObject res = (JSONObject) second.get("RESULT");
+        String code = res.get("CODE") + "";
+
+        if(code.equals("INFO-000")){
+            JSONObject tmp = (JSONObject) mealInfo.get(1);
+            JSONArray row = (JSONArray) tmp.get("row");
+            for(int i = 0; i < row.size(); i++){
+                JSONObject now = (JSONObject) row.get(i);
+                String str = now.get("DDISH_NM") + "";
+                str = str.replace("<br/>", "\n");
+                now.replace("DDISH_NM", str);
+            }
+        }
 
         return obj;
     }
