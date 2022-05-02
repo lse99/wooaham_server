@@ -3,6 +3,9 @@ package Wooaham.wooaham_server.controller;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,7 @@ import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.Teacher;
 import Wooaham.wooaham_server.domain.user.User;
+import Wooaham.wooaham_server.dto.response.DayResponse;
 import Wooaham.wooaham_server.repository.ParentRepository;
 import Wooaham.wooaham_server.repository.StudentRepository;
 import Wooaham.wooaham_server.repository.TeacherRepository;
@@ -163,6 +167,21 @@ public class ScheduleController {
         }
 
         return obj;
+    }
+
+    @GetMapping("/info/week")
+    public DayResponse getWeek(@RequestParam String day){
+        int month = Integer.parseInt(day.substring(4, 6));
+        int dayOfMonth = Integer.parseInt(day.substring(6));
+        LocalDate date = LocalDate.of(2022, month, dayOfMonth);
+        int value = date.getDayOfWeek().getValue();
+        int mon = value - 1;
+        int fri = 5 - value;
+        LocalDate monday = date.minusDays(mon);
+        LocalDate friday = date.plusDays(fri);
+        String m = monday.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String f = friday.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        return new DayResponse(m, f);
     }
 
     public List<String> getInfo(Long userId){
