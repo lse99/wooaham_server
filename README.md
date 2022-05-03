@@ -1,12 +1,16 @@
 # 💚👶wooaham_server👶💚
 ```
-우리아이함께(우아함) : 자녀의 스케줄을 하나의 앱으로 관리할 수 있으면 좋겠다는 생각으로 시작하였으며 해당 어플 하나로 시간 알림, 자녀 위치, 학교의 공지사항 등의 정보를 한 번에 손쉽게 받아볼 수 있도록 하여 바쁜 학부모들에게 편의를 제공한다.
-주변 편의시설 및 아동지킴이 집 위치를 제공함으로써 학생들에게 편의를 제공하고, 공지 및 알림 사항 읽은 사람 목록을 표시함으로써 교사들에게도 편의를 제공한다.
+[우리아이함께(우아함)]
+자녀의 스케줄을 하나의 앱으로 관리할 수 있으면 좋겠다는 생각으로 시작하였으며
+해당 어플 하나로 시간 알림, 자녀 위치, 학교의 공지사항 등의 정보를 한 번에 손쉽게 받아볼 수 있도록 하여
+바쁜 학부모들에게 편의를 제공한다.
+주변 편의시설 및 아동지킴이 집 위치를 제공함으로써 학생들에게 편의를 제공하고,
+공지 및 알림 사항 읽은 사람 목록을 표시함으로써 교사들에게도 편의를 제공한다.
 ```
 
 ## git 사용 규칙
-master 에서 직접 작업하지 않는다 (master로 바로 push 하지 않는다)
-branchname : 본인 이니셜/작업일자
+- master 에서 직접 작업하지 않는다 (master로 바로 push 하지 않는다)
+- branchname : 본인 이니셜/작업일자
 
 <br/>
 
@@ -38,17 +42,16 @@ sudo chmod 777 ./gradlew && ./gradlew build
 ```
 cd build/libs && ls
 ```
-보이는 파일중
-wooaham_server-0.0.1-SNAPSHOT-plain.jar  wooaham_server-0.0.1-SNAPSHOT.jar 
-둘중 뒤에 plain 없는 .jar 실행
+보이는 파일 중 뒤에 plain 없는 .jar 실행
 
+<br/>
 
-# RUN SERVER
-**1. 포그라운드 (터미널 닫으면 서버 닫힘)**
+## RUN SERVER
+**포그라운드 (터미널 닫으면 서버 닫힘)**
 ```
 java -jar wooaham_server-0.0.1-SNAPSHOT.jar
 ```
-**2. 백그라운드 (터미널 닫아도 서버 유지)**
+**백그라운드 (터미널 닫아도 서버 유지)**
 **- 실행**
 ```
 nohup java -jar build/libs/wooaham_server-0.0.1-SNAPSHOT.jar &
@@ -61,7 +64,7 @@ nohup java -jar build/libs/wooaham_server-0.0.1-SNAPSHOT.jar &
 ```
 tail -f nohup.out
 ```
-### 서버 배포 전에 꼭 이전 프로세스 종료시켜야 한다.
+**서버 배포 전에 꼭 이전 프로세스 종료 시키기!  **
 **종료시키기 위한 프로세스 아이디 확인**
 ```
 sudo netstat -ntlp | grep :9000
