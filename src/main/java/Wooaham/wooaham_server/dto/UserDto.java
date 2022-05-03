@@ -5,7 +5,10 @@ import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.User;
 import lombok.*;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -65,7 +68,7 @@ public class UserDto {
     }
 
     @Getter
-    public static class LogIn{
+    public static class LogInReq {
         @Email(message = "올바르지 않은 이메일 양식입니다.")
         @NotNull(message = "이메일을 입력해주세요.")
         private String email;
@@ -75,6 +78,24 @@ public class UserDto {
         @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
                 message = "올바른 형식이 아닙니다.")
         private String password;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class LogInRes{
+        private Long userId;
+        private String jwt;
+    }
+
+    @Getter
+    public static class UserInfo{
+        private Long userId;
+        private UserType role;
+
+        public UserInfo(Long userId, String role) {
+            this.userId = userId;
+            this.role = UserType.valueOf(role);
+        }
     }
 
     @Builder
