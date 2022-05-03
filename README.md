@@ -8,14 +8,14 @@
 공지 및 알림 사항 읽은 사람 목록을 표시함으로써 교사들에게도 편의를 제공한다.
 ```
 
-## git 사용 규칙
+## 🎀 git 사용 규칙
 - master 에서 직접 작업하지 않는다 (master로 바로 push 하지 않는다)
 - branchname : 본인 이니셜/작업일자
 
 <br/>
 
 
-## 서버 배포(AWS EC2내에서 실행)
+## 🎀 서버 배포(AWS EC2내에서 실행)
 **1. AWS 접속 -- ssh 인증으로 콘솔에 접속**
 
 **2. /home/ubuntu/app/wooaham_server/로 이동**
@@ -46,7 +46,7 @@ cd build/libs && ls
 
 <br/>
 
-## RUN SERVER
+## 🎀 RUN SERVER
 **포그라운드 (터미널 닫으면 서버 닫힘)**
 ```
 java -jar wooaham_server-0.0.1-SNAPSHOT.jar
@@ -64,8 +64,8 @@ nohup java -jar build/libs/wooaham_server-0.0.1-SNAPSHOT.jar &
 ```
 tail -f nohup.out
 ```
-**서버 배포 전에 꼭 이전 프로세스 종료 시키기!  **
-**종료시키기 위한 프로세스 아이디 확인**
+**서버 배포 전에 꼭 이전 프로세스 종료 시키기!  
+종료시키기 위한 프로세스 아이디 확인**
 ```
 sudo netstat -ntlp | grep :9000
 ```
