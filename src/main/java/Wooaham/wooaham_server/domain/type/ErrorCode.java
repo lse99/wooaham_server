@@ -20,12 +20,13 @@ public enum ErrorCode {
 
     // 401 UnAuthorized
     UNAUTHORIZED("UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),
-    PASSWORD_ENCRYPTION_ERROR("UA001","비밀번호 암호화에 실패하였습니다."),
-    PASSWORD_DECRYPTION_ERROR("UA002","비밀번호 복호화에 실패하였습니다."),
-    FAILED_TO_LOGIN("UA003", "없는 아이디거나 비밀번호가 틀렸습니다."),
+    PASSWORD_ENCRYPTION_ERROR("UA001","비밀번호 암호화에 실패하였습니다"),
+    PASSWORD_DECRYPTION_ERROR("UA002","비밀번호 복호화에 실패하였습니다"),
+    FAILED_TO_LOGIN("UA003", "없는 아이디거나 비밀번호가 틀렸습니다"),
     PASSWORD_CHANGE_ERROR("UA004", "비밀번호 변경에 실패하였습니다"),
     EMPTY_JWT("UA005", "JWT를 입력해주세요"),
     INVALID_JWT("UA006","유효하지 않은 JWT입니다"),
+    INVALID_USER_JWT("UA007", "권한이 없는 유저의 접근입니다."),
 
     // 403 Forbidden
     FORBIDDEN( "FB000", "허용하지 않는 요청입니다"),

@@ -2,6 +2,7 @@ package Wooaham.wooaham_server.controller;
 
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +14,6 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping
     public void registerUser(@RequestBody @Valid UserDto.Create userDto){
