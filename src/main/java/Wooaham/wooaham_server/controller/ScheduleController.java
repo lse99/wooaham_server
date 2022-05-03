@@ -116,11 +116,12 @@ public class ScheduleController {
 
     @GetMapping("/info/lunchtable/{userId}")
     public JSONObject getLunchtable(@RequestParam("startDay") String startDay,
-                                    @RequestParam("endDay") String endDay,
                                     @PathVariable Long userId) throws IOException, ParseException {
         List<String> info = getInfo(userId);
 
         StringBuilder result = new StringBuilder();
+
+        DayResponse week = getWeek(startDay);
 
         String urlStr = "https://open.neis.go.kr/hub/mealServiceDietInfo?" +
                 "KEY=0695d515ad8d408a8d6d011035f09057" +
@@ -128,8 +129,8 @@ public class ScheduleController {
                 "&pIndex=1&pSize=100" +
                 "&ATPT_OFCDC_SC_CODE=" + info.get(0) +
                 "&SD_SCHUL_CODE=" + info.get(1) +
-                "&MLSV_FROM_YMD=" + startDay +
-                "&MLSV_TO_YMD=" + endDay;
+                "&MLSV_FROM_YMD=" + week.getStartDay() +
+                "&MLSV_TO_YMD=" + week.getEndDay();
         URL url = new URL(urlStr);
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -169,7 +170,61 @@ public class ScheduleController {
         return obj;
     }
 
-    @GetMapping("/info/week")
+    @GetMapping("/info/lunchtable/one-day/{userId}")
+    public JSONObject getLunchtableOne(@RequestParam("startDay") String startDay,
+                                    @PathVariable Long userId) throws IOException, ParseException {
+        List<String> info = getInfo(userId);
+
+        StringBuilder result = new StringBuilder();
+
+        String urlStr = "https://open.neis.go.kr/hub/mealServiceDietInfo?" +
+                "KEY=0695d515ad8d408a8d6d011035f09057" +
+                "&Type=json" +
+                "&pIndex=1&pSize=100" +
+                "&ATPT_OFCDC_SC_CODE=" + info.get(0) +
+                "&SD_SCHUL_CODE=" + info.get(1) +
+                "&MLSV_FROM_YMD=" + startDay +
+                "&MLSV_TO_YMD=" + startDay;
+        URL url = new URL(urlStr);
+
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setRequestMethod("GET");
+
+        BufferedReader br;
+        br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+
+        String returnLine;
+
+        while ((returnLine = br.readLine()) != null) {
+            result.append(returnLine + "\n\r");
+        }
+        urlConnection.disconnect();
+
+        JSONParser parser = new JSONParser();
+        JSONObject obj = (JSONObject) parser.parse(result.toString());
+
+        JSONArray mealInfo = (JSONArray) obj.get("mealServiceDietInfo");
+        JSONObject first = (JSONObject) mealInfo.get(0);
+        JSONArray head = (JSONArray) first.get("head");
+        JSONObject second = (JSONObject) head.get(1);
+        JSONObject res = (JSONObject) second.get("RESULT");
+        String code = res.get("CODE") + "";
+
+        if(code.equals("INFO-000")){
+            JSONObject tmp = (JSONObject) mealInfo.get(1);
+            JSONArray row = (JSONArray) tmp.get("row");
+            for(int i = 0; i < row.size(); i++){
+                JSONObject now = (JSONObject) row.get(i);
+                String str = now.get("DDISH_NM") + "";
+                str = str.replace("<br/>", "\n");
+                now.replace("DDISH_NM", str);
+            }
+        }
+
+        return obj;
+    }
+
+
     public DayResponse getWeek(@RequestParam String day){
         int month = Integer.parseInt(day.substring(4, 6));
         int dayOfMonth = Integer.parseInt(day.substring(6));
