@@ -1,52 +1,23 @@
-# wooaham_server
+# 💚👶wooaham_server👶💚
 ```
+우리아이함께(우아함) : 자녀의 스케줄을 하나의 앱으로 관리할 수 있으면 좋겠다는 생각으로 시작하였으며 해당 어플 하나로 시간 알림, 자녀 위치, 학교의 공지사항 등의 정보를 한 번에 손쉽게 받아볼 수 있도록 하여 바쁜 학부모들에게 편의를 제공한다.
+주변 편의시설 및 아동지킴이 집 위치를 제공함으로써 학생들에게 편의를 제공하고, 공지 및 알림 사항 읽은 사람 목록을 표시함으로써 교사들에게도 편의를 제공한다.
 ```
 
 ## git 사용 규칙
 master 에서 직접 작업하지 않는다 (master로 바로 push 하지 않는다)
-
-
-## git push/pull
-#### 0. (intelliJ) 로컬 터미널에서 clone 받은 경로로 이동
-#### 1. master brandch를 pull 받는다
-
-#### 2. 작업 후 커밋한다 - branchname : 본인 이니셜/작업일자
-```
-lse0301
-```
+branchname : 본인 이니셜/작업일자
 
 <br/>
 
-#### 4. web ide에서 ( 여기서 ) merge한다.
-
-  - merge 한 사람은 톡방에 merge 했다고 알리면 다른사람들은 pull을 받는다 (#1)
-  - push한 경우 홈으로 가면 초록색 버튼 나오는데 그 버튼 눌러서 잘 하면 됨 -> merge후 브런치 삭제(삭제하겠냐고 나옴)
-   
-<br/>
-
-## AWS 접속방법
-**1. 키페어를 다운받는다**
- 
-**2. aws 로그인 후 ec2에 접속하여 인스턴스 실행중인지 확인한다 - 계속 켜놓긴 할거라 생략 가능할듯**
-
-**3. 다음 과정 진행** 
-```
-  1.SSH 클라이언트를 엽니다.
-  2.프라이빗 키 파일을 찾습니다. 이 인스턴스를 시작하는 데 사용되는 키는 wooahamkey.pem입니다.
-    필요한 경우 이 명령을 실행하여 키를 공개적으로 볼 수 없도록 합니다.
-    chmod 400 wooahamkey.pem
-  3.퍼블릭 DNS을(를) 사용하여 인스턴스에 연결: ** 키페어가 있는 디렉토리로 이동한 후에 다음 명령어 실행
-    ec2-3-34-131-126.ap-northeast-2.compute.amazonaws.com
-    ssh -i "wooahamkey.pem" ubuntu@ec2-3-34-131-126.ap-northeast-2.compute.amazonaws.com
- ```
 
 ## 서버 배포(AWS EC2내에서 실행)
-**1. 위에 AWS 접속 방법 -- ssh 인증으로 콘솔에 접속**
+**1. AWS 접속 -- ssh 인증으로 콘솔에 접속**
 
 **2. /home/ubuntu/app/wooaham_server/로 이동**
 
 ```
-cd wooaham_server/
+cd app/wooaham_server/
 ```
 **3. git 에 있는 최신 master 브랜치 반영**
 
@@ -93,7 +64,7 @@ tail -f nohup.out
 ### 서버 배포 전에 꼭 이전 프로세스 종료시켜야 한다.
 **종료시키기 위한 프로세스 아이디 확인**
 ```
-sudo lsof -t -i:9000
+sudo netstat -ntlp | grep :9000
 ```
 **백그라운드 실행 종료**
 ```
