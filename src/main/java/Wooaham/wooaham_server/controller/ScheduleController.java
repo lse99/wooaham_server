@@ -16,7 +16,6 @@ import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.Teacher;
 import Wooaham.wooaham_server.domain.user.User;
-import Wooaham.wooaham_server.dto.response.DayResponse;
 import Wooaham.wooaham_server.repository.ParentRepository;
 import Wooaham.wooaham_server.repository.StudentRepository;
 import Wooaham.wooaham_server.repository.TeacherRepository;
@@ -121,7 +120,7 @@ public class ScheduleController {
 
         StringBuilder result = new StringBuilder();
 
-        DayResponse week = getWeek(startDay);
+        List<String> week = getWeek(startDay);
 
         String urlStr = "https://open.neis.go.kr/hub/mealServiceDietInfo?" +
                 "KEY=0695d515ad8d408a8d6d011035f09057" +
@@ -129,8 +128,8 @@ public class ScheduleController {
                 "&pIndex=1&pSize=100" +
                 "&ATPT_OFCDC_SC_CODE=" + info.get(0) +
                 "&SD_SCHUL_CODE=" + info.get(1) +
-                "&MLSV_FROM_YMD=" + week.getStartDay() +
-                "&MLSV_TO_YMD=" + week.getEndDay();
+                "&MLSV_FROM_YMD=" + week.get(0) +
+                "&MLSV_TO_YMD=" + week.get(4);
         URL url = new URL(urlStr);
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -157,14 +156,35 @@ public class ScheduleController {
         String code = res.get("CODE") + "";
 
         if(code.equals("INFO-000")){
+            second = (JSONObject) head.get(0);
             JSONObject tmp = (JSONObject) mealInfo.get(1);
             JSONArray row = (JSONArray) tmp.get("row");
+
+            JSONArray arr = new JSONArray();
+            int idx = 0;
             for(int i = 0; i < row.size(); i++){
                 JSONObject now = (JSONObject) row.get(i);
-                String str = now.get("DDISH_NM") + "";
-                str = str.replace("<br/>", "\n");
-                now.replace("DDISH_NM", str);
+                if(week.get(idx).equals(now.get("MLSV_YMD"))){
+                    String str = now.get("DDISH_NM") + "";
+                    str = str.replace("<br/>", "\n");
+                    now.replace("DDISH_NM", str);
+                    arr.add(now);
+                    idx++;
+                }
+                else{
+                    String str = "{\"MLSV_YMD\":\""+week.get(idx)+ "\",\"DDISH_NM\":\"오늘은 급식이 없습니다!\"}";
+                    JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                    arr.add(jobj);
+
+                    str = now.get("DDISH_NM") + "";
+                    str = str.replace("<br/>", "\n");
+                    now.replace("DDISH_NM", str);
+                    arr.add(now);
+                    idx += 2;
+                }
             }
+            row.clear();
+            row.addAll(arr);
         }
 
         return obj;
@@ -224,20 +244,34 @@ public class ScheduleController {
         return obj;
     }
 
-
-    public DayResponse getWeek(@RequestParam String day){
+    public List<String> getWeek(@RequestParam String day){
         int month = Integer.parseInt(day.substring(4, 6));
         int dayOfMonth = Integer.parseInt(day.substring(6));
         LocalDate date = LocalDate.of(2022, month, dayOfMonth);
         int value = date.getDayOfWeek().getValue();
-        int mon = value - 1;
-        int fri = 5 - value;
-        LocalDate monday = date.minusDays(mon);
-        LocalDate friday = date.plusDays(fri);
+        int m_num = value - 1;
+        LocalDate monday = date.minusDays(m_num);
+        LocalDate tuesday = monday.plusDays(1);
+        LocalDate wednesday = monday.plusDays(2);
+        LocalDate thursday = monday.plusDays(3);
+        LocalDate friday = monday.plusDays(4);
+
         String m = monday.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String t1 = tuesday.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String w = wednesday.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String t2 = thursday.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         String f = friday.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        return new DayResponse(m, f);
+
+        List<String> s = new ArrayList<>();
+        s.add(m);
+        s.add(t1);
+        s.add(w);
+        s.add(t2);
+        s.add(f);
+        return s;
     }
+
+
 
     public List<String> getInfo(Long userId){
         User user= userRepository.findById(userId)
