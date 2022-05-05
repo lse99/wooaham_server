@@ -19,12 +19,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ApiResponse registerUser(@RequestBody @Valid UserDto.Create userDto){
+    public ApiResponse registerUser(@RequestBody UserDto.Create userDto){
         return ApiResponse.success(userService.registerUser(userDto));
     }
 
     @PostMapping("/login")
-    public ApiResponse logIn(@RequestBody @Valid UserDto.LogInReq userDto){
+    public ApiResponse logIn(@RequestBody UserDto.LogInReq userDto){
         return ApiResponse.success(userService.logIn(userDto));
     }
 
@@ -40,7 +40,7 @@ public class UserController {
 
     @PutMapping("/{userId}/password")
     public ApiResponse changePw(@PathVariable(name = "userId") Long userId,
-                         @RequestBody @Valid UserDto.ChangePw userDto){
+                         @RequestBody UserDto.ChangePw userDto){
         return ApiResponse.success(userService.changePw(userId, userDto));
     }
     @PutMapping("/{userId}/name")

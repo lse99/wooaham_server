@@ -5,7 +5,6 @@ import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.User;
 import lombok.*;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -44,39 +43,16 @@ public class UserDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Create{
-
-        @Email(message = "올바르지 않은 이메일 양식입니다.")
-        @NotNull(message = "이메일을 입력해주세요.")
         private String email;
-
-        @Size(min=8, max=20, message = "8-20자리 사이의 값을 입력해주세요")
-        @NotNull(message = "비밀번호를 입력해주세요.")
-        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
-                message = "올바른 형식이 아닙니다.")
         private String password;
-
-        @NotNull(message = "닉네임을 입력해주세요.")
         private String name;
-
-        @NotNull(message = "생년월일 입력해주세요.")
-        @Pattern(regexp = "^\\d{8}$",
-                message = "올바른 형식이 아닙니다. 20220501 형식으로 입력해주세요")
         private String birth;
-
-        @NotNull(message = "권한을 입력해주세요.")
         private UserType role;
     }
 
     @Getter
     public static class LogInReq {
-        @Email(message = "올바르지 않은 이메일 양식입니다.")
-        @NotNull(message = "이메일을 입력해주세요.")
         private String email;
-
-        @Size(min=8, max=20, message = "8-20자리 사이의 값을 입력해주세요")
-        @NotNull(message = "비밀번호를 입력해주세요.")
-        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
-                message = "올바른 형식이 아닙니다.")
         private String password;
     }
 
@@ -132,17 +108,7 @@ public class UserDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ChangePw {
-
-        @Size(min=8, max=20, message = "8-20자리 사이의 값을 입력해주세요")
-        @NotNull(message = "비밀번호를 입력해주세요.")
-        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
-                message = "올바른 형식이 아닙니다.")
         private String currentPw;
-
-        @Size(min=8, max=20, message = "8-20자리 사이의 값을 입력해주세요")
-        @NotNull(message = "비밀번호를 입력해주세요.")
-        @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
-                message = "올바른 형식이 아닙니다.")
         private String newPw;
     }
 

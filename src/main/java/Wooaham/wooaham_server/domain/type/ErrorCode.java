@@ -17,6 +17,16 @@ public enum ErrorCode {
     INVALID_ROLE_TYPE("IV001", "올바르지 않은 권한입니다"),
     INVALID_ROLE_FOR_SCHOOL("IV002", "학교 정보 등록이 불가한 권한입니다"),
     INVALID_ROLE_FOR_CLASS("IV003", "반 정보 등록이 불가한 권한입니다"),
+    INVALID_EMAIL("IV004", "올바르지 않은 이메일 형식입니다"),
+    INVALID_PASSWORD("IV005", "올바르지 않은 비밀번호 형식입니다"),
+    INVALID_PASSWORD_SIZE("IV006", "8-20자리 사이의 값을 입력해주세요"),
+    INVALID_BIRTH("IV007", "올바른 형식이 아닙니다. 20220501 형식으로 입력해주세요"),
+
+    EMPTY_EMAIL("EP000", "이메일을 입력해주세요"),
+    EMPTY_PASSWORD("EP001", "비밀번호를 입력해주세요"),
+    EMPTY_NAME("EP002", "닉네임을 입력해주세요"),
+    EMPTY_BIRTH("EP003", "생년월일을 입력해주세요"),
+    EMPTY_ROLE("EP004", "역할을 선택해주세요"),
 
     // 401 UnAuthorized
     UNAUTHORIZED("UA000", "세션이 만료되었습니다. 다시 로그인 해주세요"),

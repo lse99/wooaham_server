@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,7 +35,38 @@ public class UserService {
     private final JwtService jwtService;
 
     public boolean checkEmail(String email) {
-        return userRepository.findByEmail(email).isPresent();
+        String emailExp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
+
+        if (email == null) throw new BaseException(ErrorCode.EMPTY_EMAIL);
+        else if (!Pattern.matches(emailExp, email)) throw new BaseException(ErrorCode.INVALID_EMAIL);
+        else if (userRepository.findByEmail(email).isPresent()) throw new BaseException(ErrorCode.CONFLICT_USER);
+        else return true;
+    }
+
+    public boolean checkPw(String pw) {
+        String pwExp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}";
+
+        if (pw == null) throw new BaseException(ErrorCode.EMPTY_PASSWORD);
+        else if (!Pattern.matches(pwExp, pw)) throw new BaseException(ErrorCode.INVALID_PASSWORD);
+        else if (pw.length() < 8 || pw.length() > 20) throw new BaseException(ErrorCode.INVALID_PASSWORD_SIZE);
+        else return true;
+    }
+
+    public boolean checkName(String name) {
+        if (name == null) throw new BaseException(ErrorCode.EMPTY_NAME);
+        return true;
+    }
+
+    public boolean checkBirth(String birth) {
+        String birthExp = "^\\d{8}$";
+        if (birth == null) throw new BaseException(ErrorCode.EMPTY_BIRTH);
+        else if (!Pattern.matches(birthExp, birth)) throw new BaseException(ErrorCode.INVALID_BIRTH);
+        return true;
+    }
+
+    public boolean checkRole(UserType role) {
+        if (role == null) throw new BaseException(ErrorCode.EMPTY_ROLE);
+        return true;
     }
 
     @Transactional
@@ -70,15 +102,18 @@ public class UserService {
 
     @Transactional
     public Long registerUser(UserDto.Create userDto) {
-        if (checkEmail(userDto.getEmail())) throw new BaseException(ErrorCode.CONFLICT_USER);
+
+        if (checkEmail(userDto.getEmail()) && checkPw(userDto.getPassword()) && checkName(userDto.getName()) && checkBirth(userDto.getBirth())) {
+            checkRole(userDto.getRole());
+        }
 
         try {
             String password = new AES128(Secret.USER_INFO_PASSWORD_KEY).encrypt(userDto.getPassword());
             userDto.setPassword(password);
 
             User user = new User(
-                            userDto.getEmail(), password, userDto.getName(), userDto.getBirth(), userDto.getRole()
-                        );
+                    userDto.getEmail(), password, userDto.getName(), userDto.getBirth(), userDto.getRole()
+            );
 
             userRepository.save(user);
             registerRole(user);
@@ -92,6 +127,11 @@ public class UserService {
 
     @Transactional
     public LogInRes logIn(UserDto.LogInReq userDto) {
+
+        if (checkEmail(userDto.getEmail())) {
+            checkPw(userDto.getPassword());
+        }
+
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -119,7 +159,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         return userRepository.findById(userId)
@@ -132,7 +172,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
 
@@ -155,11 +195,15 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        if (checkPw(userDto.getCurrentPw())) {
+            checkPw(userDto.getNewPw());
+        }
 
         String currentPw;
         String newPw;
@@ -182,7 +226,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user = userRepository.findById(userId)
@@ -198,7 +242,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user = userRepository.findById(userId)
@@ -239,7 +283,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user = userRepository.findById(userId)
@@ -282,7 +326,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user_student = userRepository.findById(userId)
@@ -311,7 +355,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user = userRepository.findById(userId)
@@ -345,7 +389,7 @@ public class UserService {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
-        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+        if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user = userRepository.findById(userId)
