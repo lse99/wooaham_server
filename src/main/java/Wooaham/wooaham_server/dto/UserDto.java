@@ -183,5 +183,4 @@ public class UserDto {
     public static class ChangeLink {
         private Long studentId;
     }
-
 }

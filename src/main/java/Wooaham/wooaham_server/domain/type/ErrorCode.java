@@ -26,7 +26,7 @@ public enum ErrorCode {
     PASSWORD_CHANGE_ERROR("UA004", "비밀번호 변경에 실패하였습니다"),
     EMPTY_JWT("UA005", "JWT를 입력해주세요"),
     INVALID_JWT("UA006","유효하지 않은 JWT입니다"),
-    INVALID_USER_JWT("UA007", "권한이 없는 유저의 접근입니다."),
+    INVALID_USER_JWT("UA007", "권한이 없는 유저의 접근입니다"),
 
     // 403 Forbidden
     FORBIDDEN( "FB000", "허용하지 않는 요청입니다"),

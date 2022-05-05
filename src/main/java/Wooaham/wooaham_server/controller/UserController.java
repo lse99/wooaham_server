@@ -2,6 +2,7 @@ package Wooaham.wooaham_server.controller;
 
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.dto.UserDto.*;
+import Wooaham.wooaham_server.dto.response.ApiResponse;
 import Wooaham.wooaham_server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,62 +19,62 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public void registerUser(@RequestBody @Valid UserDto.Create userDto){
-        userService.registerUser(userDto);
+    public ApiResponse registerUser(@RequestBody @Valid UserDto.Create userDto){
+        return ApiResponse.success(userService.registerUser(userDto));
     }
 
-    @GetMapping("/login")
-    public UserDto.LogInRes logIn(@RequestBody @Valid UserDto.LogInReq userDto){
-        return userService.logIn(userDto);
+    @PostMapping("/login")
+    public ApiResponse logIn(@RequestBody @Valid UserDto.LogInReq userDto){
+        return ApiResponse.success(userService.logIn(userDto));
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable(name = "userId") Long userId){
-        return userService.getUser(userId);
+    public ApiResponse getUser(@PathVariable(name = "userId") Long userId){
+        return ApiResponse.success(userService.getUser(userId));
     }
 
     @GetMapping("/{userId}/children")
-    public List<UserDto.Child> getChildren(@PathVariable(name = "userId") Long userId){
-        return userService.getChildren(userId);
+    public ApiResponse getChildren(@PathVariable(name = "userId") Long userId){
+        return ApiResponse.success(userService.getChildren(userId));
     }
 
     @PutMapping("/{userId}/password")
-    public void changePw(@PathVariable(name = "userId") Long userId,
+    public ApiResponse changePw(@PathVariable(name = "userId") Long userId,
                          @RequestBody @Valid UserDto.ChangePw userDto){
-        userService.changePw(userId, userDto);
+        return ApiResponse.success(userService.changePw(userId, userDto));
     }
     @PutMapping("/{userId}/name")
-    public void changeName(@PathVariable(name = "userId") Long userId,
+    public ApiResponse changeName(@PathVariable(name = "userId") Long userId,
                            @RequestBody UserDto.changeName userDto){
-        userService.changeName(userId, userDto);
+       return ApiResponse.success(userService.changeName(userId, userDto));
     }
 
     @PutMapping("/{userId}/school")
-    public void registerSchool(@PathVariable(name = "userId") Long userId,
+    public ApiResponse registerSchool(@PathVariable(name = "userId") Long userId,
                                  @RequestBody UserDto.RegisterSchool userDto){
-        userService.registerSchool(userId, userDto);
+        return ApiResponse.success(userService.registerSchool(userId, userDto));
     }
 
     @PutMapping("/{userId}/class")
-    public void registerClass(@PathVariable(name = "userId") Long userId,
+    public ApiResponse registerClass(@PathVariable(name = "userId") Long userId,
                                @RequestBody UserDto.RegisterClass userDto){
-        userService.registerClass(userId, userDto);
+        return ApiResponse.success(userService.registerClass(userId, userDto));
     }
 
     @PutMapping("/{userId}/link")
-    public void registerLink(@PathVariable(name = "userId") Long userId,
+    public ApiResponse registerLink(@PathVariable(name = "userId") Long userId,
                      @RequestBody UserDto.RegisterLink userDto){
-        userService.registerLink(userId, userDto);
+        return ApiResponse.success(userService.registerLink(userId, userDto));
     }
 
     @PutMapping("/{userId}/link/change")
-    public void changeLink(@PathVariable(name = "userId") Long userId,
+    public ApiResponse changeLink(@PathVariable(name = "userId") Long userId,
                            @RequestBody UserDto.ChangeLink userDto){
-        userService.changeLink(userId, userDto);
+        return ApiResponse.success(userService.changeLink(userId, userDto));
     }
 
     @PutMapping("/{userId}")
-    public void deleteUser(@PathVariable(name = "userId") Long userId){
-        userService.deleteUser(userId);
+    public ApiResponse deleteUser(@PathVariable(name = "userId") Long userId){
+        return ApiResponse.success(userService.deleteUser(userId));
     }
 }

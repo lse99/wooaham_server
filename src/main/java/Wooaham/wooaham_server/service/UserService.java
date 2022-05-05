@@ -69,7 +69,7 @@ public class UserService {
     }
 
     @Transactional
-    public void registerUser(UserDto.Create userDto) {
+    public Long registerUser(UserDto.Create userDto) {
         if (checkEmail(userDto.getEmail())) throw new BaseException(ErrorCode.CONFLICT_USER);
 
         try {
@@ -81,8 +81,9 @@ public class UserService {
                         );
 
             userRepository.save(user);
-
             registerRole(user);
+
+            return user.getId();
 
         } catch (Exception ignored) {
             throw new BaseException(ErrorCode.PASSWORD_ENCRYPTION_ERROR);
@@ -129,6 +130,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserDto.Child> getChildren(Long userId) {
 
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -144,7 +151,13 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void changePw(Long userId, UserDto.ChangePw userDto) {
+    public Long changePw(Long userId, UserDto.ChangePw userDto) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -158,20 +171,36 @@ public class UserService {
                 user.setPassword(newPw);
                 userRepository.save(user);
             }
+            return user.getId();
+
         } catch (Exception ignored) {
             throw new BaseException(ErrorCode.PASSWORD_CHANGE_ERROR);
         }
     }
 
-    public void changeName(Long userId, UserDto.changeName userDto) {
+    public Long changeName(Long userId, UserDto.changeName userDto) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
         user.setName(userDto.getName());
         userRepository.save(user);
+
+        return user.getId();
     }
 
-    public void registerSchool(Long userId, UserDto.RegisterSchool userDto) {
+    public Long registerSchool(Long userId, UserDto.RegisterSchool userDto) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -187,7 +216,7 @@ public class UserService {
                 );
                 teacherRepository.save(teacher);
 
-                break;
+                return user.getId();
 
             case STUDENT:
                 Student student = studentRepository.findByUserId(userId)
@@ -199,14 +228,20 @@ public class UserService {
                         userDto.getSchoolCode());
                 studentRepository.save(student);
 
-                break;
+                return user.getId();
 
             default:
                 throw new BaseException(ErrorCode.INVALID_ROLE_FOR_SCHOOL);
         }
     }
 
-    public void registerClass(Long userId, UserDto.RegisterClass userDto) {
+    public Long registerClass(Long userId, UserDto.RegisterClass userDto) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -223,7 +258,7 @@ public class UserService {
                 );
                 teacherRepository.save(teacher);
 
-                break;
+                return user.getId();
 
             case STUDENT:
                 Student student = studentRepository.findByUserId(userId)
@@ -236,14 +271,19 @@ public class UserService {
                         userDto.getClassNum());
                 studentRepository.save(student);
 
-                break;
+                return user.getId();
 
             default:
                 throw new BaseException(ErrorCode.INVALID_ROLE_FOR_CLASS);
         }
     }
 
-    public void registerLink(Long userId, UserDto.RegisterLink userDto) {
+    public Long registerLink(Long userId, UserDto.RegisterLink userDto) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user_student = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
@@ -261,11 +301,18 @@ public class UserService {
 
         if (parent.getPrimaryStudentId() == null) parent.setPrimaryStudentId(student.getUserId());
 
-        student.setParent(parent);
+        student.setParentId(parent.getId());
         studentRepository.save(student);
+
+        return user_student.getId();
     }
 
-    public void changeLink(Long userId, UserDto.ChangeLink userDto) {
+    public Long changeLink(Long userId, UserDto.ChangeLink userDto) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
@@ -278,6 +325,9 @@ public class UserService {
 
         parent.setPrimaryStudentId(student.getId());
         parentRepository.save(parent);
+
+        return user.getId();
+
     }
 
     public void registerIcon(Long userId, UserDto.RegisterIcon userDto) {
@@ -291,7 +341,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void deleteUser(Long userId) {
+    public Long deleteUser(Long userId) {
+
+        UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if(!Objects.equals(userInfoByJwt.getUserId(), userId))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
@@ -299,5 +355,6 @@ public class UserService {
 
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
+        return user.getId();
     }
 }
