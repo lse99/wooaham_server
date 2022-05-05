@@ -7,6 +7,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import Wooaham.wooaham_server.domain.BaseException;
@@ -70,6 +71,52 @@ public class ScheduleController {
 
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(result.toString());
+
+        JSONArray timeInfo = (JSONArray) obj.get("elsTimetable");
+        JSONObject first = (JSONObject) timeInfo.get(0);
+        JSONArray head = (JSONArray) first.get("head");
+        JSONObject second = (JSONObject) head.get(1);
+        JSONObject res = (JSONObject) second.get("RESULT");
+        String code = res.get("CODE") + "";
+
+        if(code.equals("INFO-000")){
+            second = (JSONObject) head.get(0);
+            JSONObject tmp = (JSONObject) timeInfo.get(1);
+            JSONArray row = (JSONArray) tmp.get("row");
+
+            JSONArray arr = new JSONArray();
+            JSONArray mon = new JSONArray();
+            JSONArray tue = new JSONArray();
+            JSONArray wed = new JSONArray();
+            JSONArray thu = new JSONArray();
+            JSONArray fri = new JSONArray();
+            for(int i = 0; i < row.size(); i++){
+                JSONObject now = (JSONObject) row.get(i);
+                String today = now.get("ALL_TI_YMD") + "";
+                now.remove("ATPT_OFCDC_SC_NM");
+                now.remove("ATPT_OFCDC_SC_CODE");
+                now.remove("SD_SCHUL_CODE");
+                now.remove("AY");
+                now.remove("SEM");
+                now.remove("LOAD_DTM");
+                //now.remove("ALL_TI_YMD");
+                switch (today){
+                    case "20220425": mon.add(now);
+                        break;
+                    case "20220426": tue.add(now);
+                        break;
+                    case "20220427": wed.add(now);
+                        break;
+                    case "20220428": thu.add(now);
+                        break;
+                    case "20220429": fri.add(now);
+                        break;
+                }
+            }
+            arr.add(mon); arr.add(tue); arr.add(wed); arr.add(thu); arr.add(fri);
+            row.clear();
+            row.addAll(arr);
+        }
 
         return obj;
     }
