@@ -23,7 +23,8 @@ public class SchoolController {
         String urlStr = "https://open.neis.go.kr/hub/schoolInfo?" +
                 "KEY=6434846502e44fd39ef97ff67f7371d4" +
                 "&Type=json" +
-                "&pIndex=1&pSize=100";
+                "&pIndex=1&pSize=100" +
+                "&SCHUL_KND_SC_NM=초등학교"; // 이 녀석
 
         URL url = new URL(urlStr);
 
