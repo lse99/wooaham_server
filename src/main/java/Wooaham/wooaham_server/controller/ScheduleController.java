@@ -230,6 +230,13 @@ public class ScheduleController {
                     idx += 2;
                 }
             }
+            if(idx < 4){
+                for (int i = idx; i < 5; i++) {
+                    String str = "{\"MLSV_YMD\":\""+week.get(i)+ "\",\"DDISH_NM\":\"오늘은 급식이 없습니다!\"}";
+                    JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                    arr.add(jobj);
+                }
+            }
             row.clear();
             row.addAll(arr);
         }
