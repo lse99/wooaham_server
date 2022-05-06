@@ -38,10 +38,13 @@ public class ScheduleController {
     private final ParentRepository parentRepository;
 
     @GetMapping("/info/timetable/{userId}")
-    public JSONObject getTimetable(@PathVariable Long userId) throws IOException, ParseException {
+    public JSONObject getTimetable(@RequestParam("startDay") String startDay,
+                                   @PathVariable Long userId) throws IOException, ParseException {
         List<String> info = getInfo(userId);
 
         StringBuilder result = new StringBuilder();
+
+        List<String> week = getWeek(startDay);
 
         String urlStr = "https://open.neis.go.kr/hub/elsTimetable?" +
                 "KEY=0695d515ad8d408a8d6d011035f09057" +
@@ -52,8 +55,8 @@ public class ScheduleController {
                 "&AY=2022&SEM=1" +
                 "&GRADE=" + info.get(2) +
                 "&CLASS_NM=" + info.get(3) +
-                "&TI_FROM_YMD=20220425" +
-                "&TI_TO_YMD=20220429";
+                "&TI_FROM_YMD=" + week.get(0) +
+                "&TI_TO_YMD=" + week.get(4);
         URL url = new URL(urlStr);
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -72,52 +75,46 @@ public class ScheduleController {
         JSONParser parser = new JSONParser();
         JSONObject obj = (JSONObject) parser.parse(result.toString());
 
+
         JSONArray timeInfo = (JSONArray) obj.get("elsTimetable");
-        JSONObject first = (JSONObject) timeInfo.get(0);
-        JSONArray head = (JSONArray) first.get("head");
-        JSONObject second = (JSONObject) head.get(1);
-        JSONObject res = (JSONObject) second.get("RESULT");
-        String code = res.get("CODE") + "";
+        if (timeInfo != null) {
+            JSONObject first = (JSONObject) timeInfo.get(0);
+            JSONArray head = (JSONArray) first.get("head");
+            JSONObject second = (JSONObject) head.get(1);
+            JSONObject res = (JSONObject) second.get("RESULT");
+            String code = res.get("CODE") + "";
 
-        if(code.equals("INFO-000")){
-            second = (JSONObject) head.get(0);
-            JSONObject tmp = (JSONObject) timeInfo.get(1);
-            JSONArray row = (JSONArray) tmp.get("row");
+            if (code.equals("INFO-000")) {
+                second = (JSONObject) head.get(0);
+                JSONObject tmp = (JSONObject) timeInfo.get(1);
+                JSONArray row = (JSONArray) tmp.get("row");
 
-            JSONArray arr = new JSONArray();
-            JSONArray mon = new JSONArray();
-            JSONArray tue = new JSONArray();
-            JSONArray wed = new JSONArray();
-            JSONArray thu = new JSONArray();
-            JSONArray fri = new JSONArray();
-            for(int i = 0; i < row.size(); i++){
-                JSONObject now = (JSONObject) row.get(i);
-                String today = now.get("ALL_TI_YMD") + "";
-                now.remove("ATPT_OFCDC_SC_NM");
-                now.remove("ATPT_OFCDC_SC_CODE");
-                now.remove("SD_SCHUL_CODE");
-                now.remove("AY");
-                now.remove("SEM");
-                now.remove("LOAD_DTM");
-                //now.remove("ALL_TI_YMD");
-                switch (today){
-                    case "20220425": mon.add(now);
-                        break;
-                    case "20220426": tue.add(now);
-                        break;
-                    case "20220427": wed.add(now);
-                        break;
-                    case "20220428": thu.add(now);
-                        break;
-                    case "20220429": fri.add(now);
-                        break;
+                JSONArray arr = new JSONArray();
+                JSONArray mon = new JSONArray();
+                JSONArray tue = new JSONArray();
+                JSONArray wed = new JSONArray();
+                JSONArray thu = new JSONArray();
+                JSONArray fri = new JSONArray();
+                for (int i = 0; i < row.size(); i++) {
+                    JSONObject now = (JSONObject) row.get(i);
+                    String today = now.get("ALL_TI_YMD") + "";
+                    now.remove("ATPT_OFCDC_SC_NM");
+                    now.remove("ATPT_OFCDC_SC_CODE");
+                    now.remove("SD_SCHUL_CODE");
+                    now.remove("AY");
+                    now.remove("SEM");
+                    now.remove("LOAD_DTM");
+                    if(today.equals(week.get(0))) mon.add(now);
+                    else if(today.equals(week.get(1))) tue.add(now);
+                    else if(today.equals(week.get(2))) wed.add(now);
+                    else if (today.equals(week.get(3))) thu.add(now);
+                    else fri.add(now);
                 }
+                arr.add(mon); arr.add(tue); arr.add(wed); arr.add(thu); arr.add(fri);
+                row.clear();
+                row.addAll(arr);
             }
-            arr.add(mon); arr.add(tue); arr.add(wed); arr.add(thu); arr.add(fri);
-            row.clear();
-            row.addAll(arr);
         }
-
         return obj;
     }
 
@@ -196,44 +193,51 @@ public class ScheduleController {
         JSONObject obj = (JSONObject) parser.parse(result.toString());
 
         JSONArray mealInfo = (JSONArray) obj.get("mealServiceDietInfo");
-        JSONObject first = (JSONObject) mealInfo.get(0);
-        JSONArray head = (JSONArray) first.get("head");
-        JSONObject second = (JSONObject) head.get(1);
-        JSONObject res = (JSONObject) second.get("RESULT");
-        String code = res.get("CODE") + "";
+        if(mealInfo!=null) {
+            JSONObject first = (JSONObject) mealInfo.get(0);
+            JSONArray head = (JSONArray) first.get("head");
+            JSONObject second = (JSONObject) head.get(1);
+            JSONObject res = (JSONObject) second.get("RESULT");
+            String code = res.get("CODE") + "";
 
-        if(code.equals("INFO-000")){
-            second = (JSONObject) head.get(0);
-            JSONObject tmp = (JSONObject) mealInfo.get(1);
-            JSONArray row = (JSONArray) tmp.get("row");
+            if (code.equals("INFO-000")) {
+                second = (JSONObject) head.get(0);
+                JSONObject tmp = (JSONObject) mealInfo.get(1);
+                JSONArray row = (JSONArray) tmp.get("row");
 
-            JSONArray arr = new JSONArray();
-            int idx = 0;
-            for(int i = 0; i < row.size(); i++){
-                JSONObject now = (JSONObject) row.get(i);
-                if(week.get(idx).equals(now.get("MLSV_YMD"))){
-                    String str = now.get("DDISH_NM") + "";
-                    str = str.replace("<br/>", "\n");
-                    now.replace("DDISH_NM", str);
-                    arr.add(now);
-                    idx++;
+                JSONArray arr = new JSONArray();
+                int idx = 0;
+                for (int i = 0; i < row.size(); i++) {
+                    JSONObject now = (JSONObject) row.get(i);
+                    if (week.get(idx).equals(now.get("MLSV_YMD"))) {
+                        String str = now.get("DDISH_NM") + "";
+                        str = str.replace("<br/>", "\n");
+                        now.replace("DDISH_NM", str);
+                        arr.add(now);
+                        idx++;
+                    } else {
+                        String str = "{\"MLSV_YMD\":\"" + week.get(idx) + "\",\"DDISH_NM\":\"오늘은 급식이 없습니다!\"}";
+                        JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                        arr.add(jobj);
+
+                        str = now.get("DDISH_NM") + "";
+                        str = str.replace("<br/>", "\n");
+                        now.replace("DDISH_NM", str);
+                        arr.add(now);
+                        idx += 2;
+                    }
                 }
-                else{
-                    String str = "{\"MLSV_YMD\":\""+week.get(idx)+ "\",\"DDISH_NM\":\"오늘은 급식이 없습니다!\"}";
-                    JSONObject jobj = (JSONObject) new JSONParser().parse(str);
-                    arr.add(jobj);
-
-                    str = now.get("DDISH_NM") + "";
-                    str = str.replace("<br/>", "\n");
-                    now.replace("DDISH_NM", str);
-                    arr.add(now);
-                    idx += 2;
+                if (idx < 4) {
+                    for (int i = idx; i < 5; i++) {
+                        String str = "{\"MLSV_YMD\":\"" + week.get(i) + "\",\"DDISH_NM\":\"오늘은 급식이 없습니다!\"}";
+                        JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                        arr.add(jobj);
+                    }
                 }
+                row.clear();
+                row.addAll(arr);
             }
-            row.clear();
-            row.addAll(arr);
         }
-
         return obj;
     }
 
