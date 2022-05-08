@@ -43,6 +43,14 @@ public class UserService {
         else return true;
     }
 
+    public boolean checkLogInEmail(String email) {
+        String emailExp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
+
+        if (email == null) throw new BaseException(ErrorCode.EMPTY_EMAIL);
+        else if (!Pattern.matches(emailExp, email)) throw new BaseException(ErrorCode.INVALID_EMAIL);
+        else return true;
+    }
+
     public boolean checkPw(String pw) {
         String pwExp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}";
 
@@ -128,7 +136,7 @@ public class UserService {
     @Transactional
     public LogInRes logIn(UserDto.LogInReq userDto) {
 
-        if (checkEmail(userDto.getEmail())) {
+        if (checkLogInEmail(userDto.getEmail())) {
             checkPw(userDto.getPassword());
         }
 
