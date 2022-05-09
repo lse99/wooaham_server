@@ -1,8 +1,11 @@
 package Wooaham.wooaham_server.service;
 
 import Wooaham.wooaham_server.domain.BaseException;
+import Wooaham.wooaham_server.domain.PhoneTimeAlarm;
 import Wooaham.wooaham_server.domain.type.ErrorCode;
+import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Student;
+import Wooaham.wooaham_server.dto.request.PhoneTimeAlarmRequest;
 import Wooaham.wooaham_server.repository.ParentRepository;
 import Wooaham.wooaham_server.repository.PhoneTimeAlarmRepository;
 import Wooaham.wooaham_server.repository.StudentRepository;
@@ -28,8 +31,12 @@ public class PhoneTimeService {
 
     }
 
-    public void addPhomeTimeAlarm(){
-
+    public Long addPhomeTimeAlarm(Long userId, PhoneTimeAlarmRequest req){
+        Parent parent = parentRepository.findByUserId(userId)
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+        PhoneTimeAlarm phoneTimeAlarm = req.toPhoneTimeAlarm(parent);
+        phoneTimeAlarmRepository.save(phoneTimeAlarm);
+        return phoneTimeAlarm.getId();
     }
 
     public void updatePhoneTimeAlarm(){
