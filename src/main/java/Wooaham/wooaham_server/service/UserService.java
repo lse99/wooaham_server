@@ -143,6 +143,8 @@ public class UserService {
         User user = userRepository.findByEmail(userDto.getEmail())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
 
+        user = userRepository.findActiveUser(user.getId());
+
         String password;
         try {
             password = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword());
@@ -152,6 +154,7 @@ public class UserService {
 
         if (password.equals(userDto.getPassword())) {
             Long userId = user.getId();
+
             UserType role = user.getRole();
             String jwt = jwtService.createJwt(userId, role);
 
@@ -171,6 +174,7 @@ public class UserService {
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
         return userRepository.findById(userId)
+                .filter(User::isActivated)
                 .map(UserDto::from)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
     }
@@ -184,8 +188,7 @@ public class UserService {
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user = userRepository.findActiveUser(userId);
 
         Parent parent = parentRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
@@ -206,8 +209,7 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user = userRepository.findActiveUser(userId);
 
         if (checkPw(userDto.getCurrentPw())) {
             checkPw(userDto.getNewPw());
@@ -237,8 +239,7 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user = userRepository.findActiveUser(userId);
 
         user.setName(userDto.getName());
         userRepository.save(user);
@@ -253,8 +254,7 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user = userRepository.findActiveUser(userId);
 
         switch (user.getRole()) {
             case TEACHER:
@@ -294,8 +294,7 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user = userRepository.findActiveUser(userId);
 
         switch (user.getRole()) {
             case TEACHER:
@@ -337,8 +336,7 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
-        User user_student = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user_student = userRepository.findActiveUser(userId);
 
         Student student = studentRepository.findByUserId(user_student.getId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
@@ -366,8 +364,7 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user = userRepository.findActiveUser(userId);
 
         Parent parent = parentRepository.findByUserId(user.getId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
@@ -383,8 +380,8 @@ public class UserService {
     }
 
     public void registerIcon(Long userId, UserDto.RegisterIcon userDto) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+
+        User user = userRepository.findActiveUser(userId);
 
         Icon icon = iconRepository.findById(userDto.getIconId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ICON));
@@ -400,8 +397,7 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+        User user = userRepository.findActiveUser(userId);
 
         if (user.getDeletedAt() != null) throw new BaseException(ErrorCode.CONFLICT_USER_DELETED);
 
