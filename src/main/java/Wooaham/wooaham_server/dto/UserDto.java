@@ -22,27 +22,67 @@ public class UserDto {
     private String email;
     private String birth;
     private UserType role;
+    private String schoolName;
+    private Integer grade;
+    private Integer classNum;
     private LocalDateTime createdAt;
     private LocalDateTime deletedAt;
 
-    public static UserDto from(User user){
-        return new UserDto(
-                user.getId(),
-                IconDto.from(user.getIcon()),
-                user.getName(),
-                user.getEmail(),
-                user.getBirth(),
-                user.getRole(),
-                user.getCreatedAt(),
-                user.getDeletedAt()
-        );
+    public static UserDto from(User user) {
+        UserDto userDto = null;
+        switch (user.getRole()){
+            case PARENT:
+                userDto = new UserDto(
+                        user.getId(),
+                        IconDto.from(user.getIcon()),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getBirth(),
+                        user.getRole(),
+                        null,null,null,
+                        user.getCreatedAt(),
+                        user.getDeletedAt()
+                );
+                break;
+            case STUDENT:
+                userDto = new UserDto(
+                        user.getId(),
+                        IconDto.from(user.getIcon()),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getBirth(),
+                        user.getRole(),
+                        user.getStudents().get(0).getSchoolName(),
+                        user.getStudents().get(0).getGrade(),
+                        user.getStudents().get(0).getClassNum(),
+                        user.getCreatedAt(),
+                        user.getDeletedAt()
+                );
+                break;
+            case TEACHER:
+                userDto = new UserDto(
+                        user.getId(),
+                        IconDto.from(user.getIcon()),
+                        user.getName(),
+                        user.getEmail(),
+                        user.getBirth(),
+                        user.getRole(),
+                        user.getTeachers().get(0).getSchoolName(),
+                        user.getTeachers().get(0).getGrade(),
+                        user.getTeachers().get(0).getClassNum(),
+                        user.getCreatedAt(),
+                        user.getDeletedAt()
+                );
+                break;
+        }
+        return userDto;
     }
 
     @Getter
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Create{
+    public static class Create {
         private String email;
         private String password;
         private String name;
@@ -58,15 +98,15 @@ public class UserDto {
 
     @Getter
     @AllArgsConstructor
-    public static class LogInRes{
+    public static class LogInRes {
         private Long userId;
         private String jwt;
     }
 
     @Getter
-    public static class UserInfo{
-        private Long userId;
-        private UserType role;
+    public static class UserInfo {
+        private final Long userId;
+        private final UserType role;
 
         public UserInfo(Long userId, String role) {
             this.userId = userId;
@@ -81,7 +121,7 @@ public class UserDto {
         private Long studentId;
         private String name;
 
-        public static Child from(Student student){
+        public static Child from(Student student) {
             return Child.builder()
                     .userId(student.getUser().getId())
                     .studentId(student.getId())
