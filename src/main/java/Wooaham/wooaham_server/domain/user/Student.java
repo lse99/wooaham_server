@@ -24,7 +24,8 @@ public class Student {
     private String classCode;
     private Integer grade;
     private Integer classNum;
-    private Integer phoneUsageTime;
+    private Integer phoneHour;
+    private Integer phoneMinute;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

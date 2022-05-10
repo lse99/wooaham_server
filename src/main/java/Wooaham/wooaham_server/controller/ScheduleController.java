@@ -17,10 +17,12 @@ import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.Teacher;
 import Wooaham.wooaham_server.domain.user.User;
+import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.repository.ParentRepository;
 import Wooaham.wooaham_server.repository.StudentRepository;
 import Wooaham.wooaham_server.repository.TeacherRepository;
 import Wooaham.wooaham_server.repository.UserRepository;
+import Wooaham.wooaham_server.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -36,11 +38,11 @@ public class ScheduleController {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final ParentRepository parentRepository;
+    private final JwtService jwtService;
 
-    @GetMapping("/info/timetable/{userId}")
-    public JSONObject getTimetable(@RequestParam("startDay") String startDay,
-                                   @PathVariable Long userId) throws IOException, ParseException {
-        List<String> info = getInfo(userId);
+    @GetMapping("/info/timetable")
+    public JSONObject getTimetable(@RequestParam("startDay") String startDay) throws IOException, ParseException {
+        List<String> info = getInfo();
 
         StringBuilder result = new StringBuilder();
 
@@ -110,6 +112,66 @@ public class ScheduleController {
                     else if (today.equals(week.get(3))) thu.add(now);
                     else fri.add(now);
                 }
+                if(mon.isEmpty()){
+                    for (int i = 1; i <= 4; i++) {
+                        String str = "{\"PERIO\":\"" + i + "\"" +
+                                ",\"GRADE\":\"" + info.get(2) + "\"" +
+                                ",\"CLASS_NM\":\"" + info.get(3) + "\"" +
+                                ",\"ALL_TI_YMD\":\"" + week.get(0) + "\"" +
+                                ",\"SCHUL_NM\":\"" + info.get(4) + "\"" +
+                                ",\"ITRT_CNTNT\":\"휴일\"}";
+                        JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                        mon.add(jobj);
+                    }
+                }
+                if(tue.isEmpty()){
+                    for (int i = 1; i <= 4; i++) {
+                        String str = "{\"PERIO\":\"" + i + "\"" +
+                                ",\"GRADE\":\"" + info.get(2) + "\"" +
+                                ",\"CLASS_NM\":\"" + info.get(3) + "\"" +
+                                ",\"ALL_TI_YMD\":\"" + week.get(1) + "\"" +
+                                ",\"SCHUL_NM\":\"" + info.get(4) + "\"" +
+                                ",\"ITRT_CNTNT\":\"휴일\"}";
+                        JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                        tue.add(jobj);
+                    }
+                }
+                if(wed.isEmpty()){
+                    for (int i = 1; i <= 4; i++) {
+                        String str = "{\"PERIO\":\"" + i + "\"" +
+                                ",\"GRADE\":\"" + info.get(2) + "\"" +
+                                ",\"CLASS_NM\":\"" + info.get(3) + "\"" +
+                                ",\"ALL_TI_YMD\":\"" + week.get(2) + "\"" +
+                                ",\"SCHUL_NM\":\"" + info.get(4) + "\"" +
+                                ",\"ITRT_CNTNT\":\"휴일\"}";
+                        JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                        wed.add(jobj);
+                    }
+                }
+                if(thu.isEmpty()){
+                    for (int i = 1; i <= 4; i++) {
+                        String str = "{\"PERIO\":\"" + i + "\"" +
+                                ",\"GRADE\":\"" + info.get(2) + "\"" +
+                                ",\"CLASS_NM\":\"" + info.get(3) + "\"" +
+                                ",\"ALL_TI_YMD\":\"" + week.get(3) + "\"" +
+                                ",\"SCHUL_NM\":\"" + info.get(4) + "\"" +
+                                ",\"ITRT_CNTNT\":\"휴일\"}";
+                        JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                        thu.add(jobj);
+                    }
+                }
+                if(fri.isEmpty()){
+                    for (int i = 1; i <= 4; i++) {
+                        String str = "{\"PERIO\":\"" + i + "\"" +
+                                ",\"GRADE\":\"" + info.get(2) + "\"" +
+                                ",\"CLASS_NM\":\"" + info.get(3) + "\"" +
+                                ",\"ALL_TI_YMD\":\"" + week.get(4) + "\"" +
+                                ",\"SCHUL_NM\":\"" + info.get(4) + "\"" +
+                                ",\"ITRT_CNTNT\":\"휴일\"}";
+                        JSONObject jobj = (JSONObject) new JSONParser().parse(str);
+                        fri.add(jobj);
+                    }
+                }
                 arr.add(mon); arr.add(tue); arr.add(wed); arr.add(thu); arr.add(fri);
                 row.clear();
                 row.addAll(arr);
@@ -118,10 +180,9 @@ public class ScheduleController {
         return obj;
     }
 
-    @GetMapping("/info/timetable/one-day/{userId}")
-    public JSONObject getTimetableOne(@RequestParam("startDay") String startDay,
-                                      @PathVariable Long userId) throws IOException, ParseException {
-        List<String> info = getInfo(userId);
+    @GetMapping("/info/timetable/one-day")
+    public JSONObject getTimetableOne(@RequestParam("startDay") String startDay) throws IOException, ParseException {
+        List<String> info = getInfo();
 
         StringBuilder result = new StringBuilder();
 
@@ -157,10 +218,9 @@ public class ScheduleController {
         return obj;
     }
 
-    @GetMapping("/info/lunchtable/{userId}")
-    public JSONObject getLunchtable(@RequestParam("startDay") String startDay,
-                                    @PathVariable Long userId) throws IOException, ParseException {
-        List<String> info = getInfo(userId);
+    @GetMapping("/info/lunchtable")
+    public JSONObject getLunchtable(@RequestParam("startDay") String startDay) throws IOException, ParseException {
+        List<String> info = getInfo();
 
         StringBuilder result = new StringBuilder();
 
@@ -241,10 +301,9 @@ public class ScheduleController {
         return obj;
     }
 
-    @GetMapping("/info/lunchtable/one-day/{userId}")
-    public JSONObject getLunchtableOne(@RequestParam("startDay") String startDay,
-                                    @PathVariable Long userId) throws IOException, ParseException {
-        List<String> info = getInfo(userId);
+    @GetMapping("/info/lunchtable/one-day")
+    public JSONObject getLunchtableOne(@RequestParam("startDay") String startDay) throws IOException, ParseException {
+        List<String> info = getInfo();
 
         StringBuilder result = new StringBuilder();
 
@@ -324,34 +383,39 @@ public class ScheduleController {
 
 
 
-    public List<String> getInfo(Long userId){
-        User user= userRepository.findById(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
+    public List<String> getInfo(){
+
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+
         String sidoCode;
         String schoolCode;
         String grade;
         String class_nm;
-        if(user.getRole()== UserType.PARENT){
-            Parent parent = parentRepository.findByUserId(userId).get();
-            Student student = studentRepository.findById(parent.getPrimaryStudentId()).get();
+        String schoolName;
+        if(userInfo.getRole()== UserType.PARENT){
+            Parent parent = parentRepository.findByUserId(userInfo.getUserId()).get();
+            Student student = studentRepository.findByUserId(parent.getPrimaryStudentId()).get();
             sidoCode= student.getOfficeCode();
             schoolCode= student.getSchoolCode();
             grade = String.valueOf(student.getGrade());
             class_nm = String.valueOf(student.getClassNum());
+            schoolName = String.valueOf(student.getSchoolName());
         }
-        else if(user.getRole()==UserType.STUDENT){
-            Student student = studentRepository.findByUserId(userId).get();
+        else if(userInfo.getRole()==UserType.STUDENT){
+            Student student = studentRepository.findByUserId(userInfo.getUserId()).get();
             sidoCode= student.getOfficeCode();
             schoolCode= student.getSchoolCode();
             grade = String.valueOf(student.getGrade());
             class_nm = String.valueOf(student.getClassNum());
+            schoolName = String.valueOf(student.getSchoolName());
         }
         else{
-            Teacher teacher = teacherRepository.findByUserId(userId).get();
+            Teacher teacher = teacherRepository.findByUserId(userInfo.getUserId()).get();
             sidoCode= teacher.getOfficeCode();
             schoolCode= teacher.getSchoolCode();
             grade = String.valueOf(teacher.getGrade());
             class_nm = String.valueOf(teacher.getClassNum());
+            schoolName = String.valueOf(teacher.getSchoolName());
         }
 
         List<String> info = new ArrayList<>();
@@ -359,6 +423,7 @@ public class ScheduleController {
         info.add(schoolCode);
         info.add(grade);
         info.add(class_nm);
+        info.add(schoolName);
 
         return info;
     }
