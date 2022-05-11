@@ -22,7 +22,7 @@ public class HomeworkController {
         return ApiResponse.success(homeworkService.findAcademyHomework());
     }
 
-    @PostMapping("/{userId}")
+    @PostMapping("")
     public ApiResponse addHomework(@RequestBody HomeworkRequest req){
         return ApiResponse.success(homeworkService.addHomework(req));
     }
