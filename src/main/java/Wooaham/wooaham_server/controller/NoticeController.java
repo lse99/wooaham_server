@@ -27,9 +27,9 @@ public class NoticeController {
         return ApiResponse.success(noticeService.findReaders(noticeId));
     }
 
-    @PostMapping("/{userId}")
-    public ApiResponse addNotice(@RequestBody NoticeRequest req, @PathVariable Long userId){
-        return ApiResponse.success(noticeService.addNotice(userId, req));
+    @PostMapping("")
+    public ApiResponse addNotice(@RequestBody NoticeRequest req){
+        return ApiResponse.success(noticeService.addNotice(req));
     }
 
     @PutMapping("/{noticeId}")

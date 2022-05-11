@@ -5,6 +5,7 @@ import Wooaham.wooaham_server.domain.Homework;
 import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.type.HomeworkType;
 import Wooaham.wooaham_server.domain.user.Student;
+import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.dto.request.HomeworkRequest;
 import Wooaham.wooaham_server.dto.response.HomeworkResponse;
 import Wooaham.wooaham_server.repository.HomeworkRepository;
@@ -22,10 +23,12 @@ import java.util.List;
 public class HomeworkService {
     private final HomeworkRepository homeworkRepository;
     private final StudentRepository studentRepository;
+    private final JwtService jwtService;
 
     @Transactional(readOnly = true)
-    public List<HomeworkResponse> findSchoolHomework(Long userId){
-        Student user = studentRepository.findByUserId(userId)
+    public List<HomeworkResponse> findSchoolHomework(){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        Student user = studentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
         List<Homework> hwList = homeworkRepository.findByUserAndType(user, HomeworkType.SCHOOL);
         List<HomeworkResponse> responses = new ArrayList<>();
@@ -35,8 +38,9 @@ public class HomeworkService {
     }
 
     @Transactional(readOnly = true)
-    public List<HomeworkResponse> findAcademyHomework(Long userId){
-        Student user = studentRepository.findByUserId(userId)
+    public List<HomeworkResponse> findAcademyHomework(){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        Student user = studentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
         List<Homework> hwList = homeworkRepository.findByUserAndType(user, HomeworkType.ACADEMY);
         List<HomeworkResponse> responses = new ArrayList<>();
@@ -45,8 +49,9 @@ public class HomeworkService {
         return responses;
     }
 
-    public Long addHomework(Long userId, HomeworkRequest req){
-        Student user = studentRepository.findByUserId(userId)
+    public Long addHomework(HomeworkRequest req){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        Student user = studentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
         Homework homework = req.toHomework(user);
         homeworkRepository.save(homework);

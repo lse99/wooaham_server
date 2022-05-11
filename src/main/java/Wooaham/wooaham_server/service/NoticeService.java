@@ -6,6 +6,7 @@ import Wooaham.wooaham_server.domain.notice.Reader;
 import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Teacher;
+import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.dto.request.NoticeRequest;
 import Wooaham.wooaham_server.dto.response.NoticeResponse;
 import Wooaham.wooaham_server.repository.*;
@@ -25,6 +26,7 @@ public class NoticeService {
     private final ParentRepository parentRepository;
     private final StudentRepository studentRepository;
     private final ReaderRepository readerRepository;
+    private final JwtService jwtService;
 
     @Transactional(readOnly = true)
     public List<NoticeResponse> findNotices(String classCode){
@@ -38,9 +40,9 @@ public class NoticeService {
         return NoticeResponse.of(findNotice);
     }
 
-    //TODO userId 받는 것들 - user token으로 id 없이 바로 받을지 userId로 받을지 FE랑 상의해서 결정
-    public Long addNotice(Long userId, NoticeRequest req){
-        Teacher user = teacherRepository.findByUserId(userId)
+    public Long addNotice(NoticeRequest req){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        Teacher user = teacherRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
         Notice notice = req.toNotice(user);
         noticeRepository.save(notice);
