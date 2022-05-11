@@ -13,18 +13,18 @@ public class HomeworkController {
     private final HomeworkService homeworkService;
 
     @GetMapping("/school")
-    public ApiResponse getSchoolHomework(@RequestParam Long userId){
-        return ApiResponse.success(homeworkService.findSchoolHomework(userId));
+    public ApiResponse getSchoolHomework(){
+        return ApiResponse.success(homeworkService.findSchoolHomework());
     }
 
     @GetMapping("/academy")
-    public ApiResponse getAcademyHomework(@RequestParam Long userId){
-        return ApiResponse.success(homeworkService.findAcademyHomework(userId));
+    public ApiResponse getAcademyHomework(){
+        return ApiResponse.success(homeworkService.findAcademyHomework());
     }
 
     @PostMapping("/{userId}")
-    public ApiResponse addHomework(@RequestBody HomeworkRequest req, @PathVariable Long userId){
-        return ApiResponse.success(homeworkService.addHomework(userId, req));
+    public ApiResponse addHomework(@RequestBody HomeworkRequest req){
+        return ApiResponse.success(homeworkService.addHomework(req));
     }
 
     @PutMapping("/{hwId}")
