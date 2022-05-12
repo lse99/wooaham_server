@@ -23,7 +23,7 @@ public class AlarmController {
         return ApiResponse.success(alarmService.findOne(alarmId));
     }
 
-    @PostMapping("/{userId}")
+    @PostMapping("")
     public ApiResponse addAlarm(@RequestBody AlarmRequest req){
         return ApiResponse.success(alarmService.addAlarm(req));
     }
