@@ -14,8 +14,8 @@ public class AlarmController {
     private final AlarmService alarmService;
 
     @GetMapping("")
-    public ApiResponse getAlarms(@RequestParam Long userId){
-        return ApiResponse.success(alarmService.findAlarms(userId));
+    public ApiResponse getAlarms(){
+        return ApiResponse.success(alarmService.findAlarms());
     }
 
     @GetMapping("/details")
@@ -24,8 +24,8 @@ public class AlarmController {
     }
 
     @PostMapping("/{userId}")
-    public ApiResponse addAlarm(@RequestBody AlarmRequest req, @PathVariable Long userId){
-        return ApiResponse.success(alarmService.addAlarm(userId, req));
+    public ApiResponse addAlarm(@RequestBody AlarmRequest req){
+        return ApiResponse.success(alarmService.addAlarm(req));
     }
 
     @PutMapping("/{alarmId}")
