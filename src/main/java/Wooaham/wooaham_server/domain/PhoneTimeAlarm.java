@@ -33,4 +33,9 @@ public class PhoneTimeAlarm {
     public static PhoneTimeAlarm createPhoneTimeAlarm(Parent parent, Integer hour, Integer minute){
         return new PhoneTimeAlarm(parent, hour, minute);
     }
+
+    public void updatePhoneTimeAlarm(Integer hour, Integer minute) {
+        this.hour = hour;
+        this.minute = minute;
+    }
 }
