@@ -5,6 +5,7 @@ import Wooaham.wooaham_server.domain.BaseException;
 import Wooaham.wooaham_server.domain.Icon;
 import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.user.User;
+import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.dto.request.AlarmRequest;
 import Wooaham.wooaham_server.dto.response.AlarmResponse;
 import Wooaham.wooaham_server.repository.AlarmRepository;
@@ -25,11 +26,12 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final UserRepository userRepository;
     private final IconRepository iconRepository;
+    private final JwtService jwtService;
 
-    //TODO userId 받는 것들 - user token으로 id 없이 바로 받을지 userId로 받을지 FE랑 상의해서 결정
     @Transactional(readOnly = true)
-    public List<AlarmResponse> findAlarms(Long userId){
-        return alarmRepository.findAllByUserId(userId);
+    public List<AlarmResponse> findAlarms(){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        return alarmRepository.findAllByUserId(userInfo.getUserId());
     }
 
     @Transactional(readOnly = true)
@@ -39,8 +41,9 @@ public class AlarmService {
         return AlarmResponse.of(findAlarm);
     }
 
-    public Long addAlarm(Long userId, AlarmRequest req){
-        User user = userRepository.findById(userId)
+    public Long addAlarm(AlarmRequest req){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        User user = userRepository.findById(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_USER));
         Icon icon = iconRepository.findById(req.getIconId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ICON));
