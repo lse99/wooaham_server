@@ -7,7 +7,7 @@ import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.dto.request.PhoneTimeAlarmRequest;
-import Wooaham.wooaham_server.dto.response.PhoneTimeAlarmResponse;
+import Wooaham.wooaham_server.dto.response.PhoneTimeResponse;
 import Wooaham.wooaham_server.repository.ParentRepository;
 import Wooaham.wooaham_server.repository.PhoneTimeAlarmRepository;
 import Wooaham.wooaham_server.repository.StudentRepository;
@@ -24,11 +24,17 @@ public class PhoneTimeService {
     private final PhoneTimeAlarmRepository phoneTimeAlarmRepository;
     private final JwtService jwtService;
 
-    public void findPhoneUsageTime(){
-
+    public PhoneTimeResponse findPhoneUsageTime(){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        Parent parent = parentRepository.findByUserId(userInfo.getUserId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+        Student student = studentRepository.findByUserId(parent.getPrimaryStudentId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
+        return PhoneTimeResponse.of(student.getPhoneHour(), student.getPhoneMinute());
     }
 
     public void updatePhoneUsageTime(){
+        //TODO student 휴대폰 사용시간 어떻게 update 할 건지
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Parent parent = parentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
@@ -37,13 +43,13 @@ public class PhoneTimeService {
 
     }
 
-    public PhoneTimeAlarmResponse findPhoneTimeAlarm(){
+    public PhoneTimeResponse findPhoneTimeAlarm(){
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Parent parent = parentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
         PhoneTimeAlarm phoneTimeAlarm = phoneTimeAlarmRepository.findByStudentId(parent.getPrimaryStudentId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ALARM));
-        return PhoneTimeAlarmResponse.of(phoneTimeAlarm);
+        return PhoneTimeResponse.of(phoneTimeAlarm);
     }
 
     public Long addPhoneTimeAlarm(PhoneTimeAlarmRequest req){

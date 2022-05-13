@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ScheduleController {
 
-    private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final ParentRepository parentRepository;
