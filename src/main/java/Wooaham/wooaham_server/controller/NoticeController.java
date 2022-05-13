@@ -13,8 +13,8 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @GetMapping("")
-    public ApiResponse getNotices(@RequestParam String classCode){
-        return ApiResponse.success(noticeService.findNotices(classCode));
+    public ApiResponse getNotices(){
+        return ApiResponse.success(noticeService.findNotices());
     }
 
     @GetMapping("/{noticeId}")
@@ -44,8 +44,8 @@ public class NoticeController {
     }
 
     @PostMapping("/{noticeId}/reading")
-    public ApiResponse checkNoticeRead(@PathVariable Long noticeId, @RequestParam Long userId) {
-        noticeService.checkReading(noticeId, userId);
+    public ApiResponse checkNoticeRead(@PathVariable Long noticeId) {
+        noticeService.checkReading(noticeId);
         return ApiResponse.success(null);
     }
 

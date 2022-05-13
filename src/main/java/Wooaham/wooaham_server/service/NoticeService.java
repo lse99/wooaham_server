@@ -4,7 +4,9 @@ import Wooaham.wooaham_server.domain.BaseException;
 import Wooaham.wooaham_server.domain.notice.Notice;
 import Wooaham.wooaham_server.domain.notice.Reader;
 import Wooaham.wooaham_server.domain.type.ErrorCode;
+import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.Parent;
+import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.domain.user.Teacher;
 import Wooaham.wooaham_server.dto.UserDto;
 import Wooaham.wooaham_server.dto.request.NoticeRequest;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -29,8 +32,22 @@ public class NoticeService {
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
-    public List<NoticeResponse> findNotices(String classCode){
-        return noticeRepository.findAllByClassCode(classCode);
+    public List<NoticeResponse> findNotices(){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+
+        if(userInfo.getRole().equals(UserType.STUDENT)){
+            Student student = studentRepository.findByUserId(userInfo.getUserId()).get();
+            return noticeRepository.findAllByClassCode(student.getClassCode());
+        }
+        else if(userInfo.getRole().equals(UserType.TEACHER)){
+            Teacher teacher = teacherRepository.findByUserId(userInfo.getUserId()).get();
+            return noticeRepository.findAllByClassCode(teacher.getClassCode());
+        }
+        else{
+            Parent parent = parentRepository.findByUserId(userInfo.getUserId()).get();
+            Student student = studentRepository.findByUserId(parent.getPrimaryStudentId()).get();
+            return noticeRepository.findAllByClassCode(student.getClassCode());
+        }
     }
 
     @Transactional(readOnly = true)
@@ -85,14 +102,16 @@ public class NoticeService {
     }
 
 
-    public void checkReading(Long noticeId, Long parentId){
+    public void checkReading(Long noticeId){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
-        Parent user = parentRepository.findByUserId(parentId)
-                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
 
-        if (readerRepository.findByNoticeAndParent(findNotice, user) == null) {
-            readerRepository.save(Reader.of(findNotice, user));
+        if(userInfo.getRole().equals(UserType.PARENT)){
+            Parent user = parentRepository.findByUserId(userInfo.getUserId()).get();
+            if (readerRepository.findByNoticeAndParent(findNotice, user) == null) {
+                readerRepository.save(Reader.of(findNotice, user));
+            }
         }
     }
 }
