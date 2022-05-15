@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 public class SchoolController {
 
     @GetMapping("/schools")
-    public JSONObject getSchools(@RequestParam(name = "pIndex") Integer pIndex) throws IOException, ParseException{
+    public JSONObject getSchools(@RequestParam(name = "page") Integer page) throws IOException, ParseException{
 
         StringBuilder result = new StringBuilder();
 
@@ -24,7 +24,7 @@ public class SchoolController {
         String urlStr = "https://open.neis.go.kr/hub/schoolInfo?" +
                 "KEY=6434846502e44fd39ef97ff67f7371d4" +
                 "&Type=json" +
-                "&pIndex=" + pIndex +
+                "&pIndex=" + page +
                 "&pSize=1000" ;
         URL url = new URL(urlStr);
 

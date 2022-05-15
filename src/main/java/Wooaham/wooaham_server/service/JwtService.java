@@ -69,7 +69,7 @@ public class JwtService {
             throw new BaseException(ErrorCode.INVALID_JWT);
         }
 
-        // 3. userIdx 추출
+        // 3. userIdx, role 추출
         return new UserInfo(
                 claims.getBody().get("userIdx", Long.class),
                 claims.getBody().get("role", String.class)

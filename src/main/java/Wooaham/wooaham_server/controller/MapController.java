@@ -1,5 +1,6 @@
 package Wooaham.wooaham_server.controller;
 
+import Wooaham.wooaham_server.dto.LocationDto;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -11,16 +12,22 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/maps")
 public class MapController {
 
     @GetMapping("/stores")
-    public JSONObject getStores() throws IOException, ParseException {
+    public JSONObject getStores(@RequestParam(name = "page") Integer page) throws IOException, ParseException {
         StringBuilder result = new StringBuilder();
 
-        String urlStr = "";
+        String urlStr = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_P_MGPRTFA" +
+                "&key=947ADDDF-C1E0-3D54-893B-9BC84D3A44A6" +
+                "&geomfilter=BOX(124,33,131,43)" +
+                "&page=" + page +
+                "&size=1000";
         URL url = new URL(urlStr);
 
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -41,11 +48,14 @@ public class MapController {
         return (JSONObject) parser.parse(result.toString());
     }
 
-    @GetMapping("/stores/{storeId}")
-    public JSONObject getStore(@PathVariable(name = "storeId") Long storeId) throws IOException, ParseException {
+    @PostMapping("/stores/detail")
+    public JSONObject getStore(@RequestBody LocationDto location) throws IOException, ParseException {
         StringBuilder result = new StringBuilder();
 
-        String urlStr = "";
+        String urlStr = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_P_MGPRTFA" +
+                "&key=947ADDDF-C1E0-3D54-893B-9BC84D3A44A6" +
+                "&geomfilter=POINT(" + location.getLng() + " " + location.getLat()+ ")";
+
         URL url = new URL(urlStr);
 
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -65,5 +75,6 @@ public class MapController {
 
         return (JSONObject) parser.parse(result.toString());
     }
-
 }
+
+
