@@ -5,6 +5,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,15 +17,16 @@ import java.nio.charset.StandardCharsets;
 public class SchoolController {
 
     @GetMapping("/schools")
-    public JSONObject getSchools() throws IOException, ParseException{
+    public JSONObject getSchools(@RequestParam(name = "pIndex") Integer pIndex) throws IOException, ParseException{
 
         StringBuilder result = new StringBuilder();
 
+        //max.pIndex = 13
         String urlStr = "https://open.neis.go.kr/hub/schoolInfo?" +
                 "KEY=6434846502e44fd39ef97ff67f7371d4" +
                 "&Type=json" +
-                "&pIndex=1&pSize=100";
-
+                "&pIndex=" + pIndex +
+                "&pSize=1000" ;
         URL url = new URL(urlStr);
 
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
