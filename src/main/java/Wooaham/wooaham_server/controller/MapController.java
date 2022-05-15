@@ -13,19 +13,14 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 @RestController
-public class SchoolController {
+@RequestMapping("/users")
+public class MapController {
 
-    @GetMapping("/schools")
-    public JSONObject getSchools(@RequestParam(name = "pIndex") Integer pIndex) throws IOException, ParseException{
-
+    @GetMapping("/stores")
+    public JSONObject getStores() throws IOException, ParseException {
         StringBuilder result = new StringBuilder();
 
-        //max.pIndex = 13
-        String urlStr = "https://open.neis.go.kr/hub/schoolInfo?" +
-                "KEY=6434846502e44fd39ef97ff67f7371d4" +
-                "&Type=json" +
-                "&pIndex=" + pIndex +
-                "&pSize=1000" ;
+        String urlStr = "";
         URL url = new URL(urlStr);
 
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -45,4 +40,30 @@ public class SchoolController {
 
         return (JSONObject) parser.parse(result.toString());
     }
+
+    @GetMapping("/stores/{storeId}")
+    public JSONObject getStore(@PathVariable(name = "storeId") Long storeId) throws IOException, ParseException {
+        StringBuilder result = new StringBuilder();
+
+        String urlStr = "";
+        URL url = new URL(urlStr);
+
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+        httpURLConnection.setRequestMethod("GET");
+
+        BufferedReader br;
+        br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
+
+        String returnLine;
+
+        while ((returnLine = br.readLine()) != null) {
+            result.append(returnLine).append("\n\r");
+        }
+        httpURLConnection.disconnect();
+
+        JSONParser parser = new JSONParser();
+
+        return (JSONObject) parser.parse(result.toString());
+    }
+
 }
