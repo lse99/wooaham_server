@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PhoneTimeAlarmRequest {
+public class PhoneTimeRequest {
     private Integer hour;
     private Integer minute;
 
