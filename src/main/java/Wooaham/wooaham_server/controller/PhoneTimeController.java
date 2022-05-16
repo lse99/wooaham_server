@@ -1,6 +1,6 @@
 package Wooaham.wooaham_server.controller;
 
-import Wooaham.wooaham_server.dto.request.PhoneTimeAlarmRequest;
+import Wooaham.wooaham_server.dto.request.PhoneTimeRequest;
 import Wooaham.wooaham_server.dto.response.ApiResponse;
 import Wooaham.wooaham_server.service.PhoneTimeService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,8 @@ public class PhoneTimeController {
     }
 
     @PutMapping("")
-    public ApiResponse updatePhoneUsageTime(){
-        return null;
+    public ApiResponse updatePhoneUsageTime(@RequestBody PhoneTimeRequest req){
+        return ApiResponse.success(phoneTimeService.updatePhoneUsageTime(req));
     }
 
     @GetMapping("/alarm")
@@ -28,12 +28,13 @@ public class PhoneTimeController {
     }
 
     @PutMapping("/alarm")
-    public ApiResponse modifyPhoneUsageTimeAlarm(@RequestBody PhoneTimeAlarmRequest req){
+    public ApiResponse modifyPhoneUsageTimeAlarm(@RequestBody PhoneTimeRequest req){
         return ApiResponse.success(phoneTimeService.addPhoneTimeAlarm(req));
     }
 
     @DeleteMapping("/alarm")
     public ApiResponse deletePhoneUsageTimeAlarm(){
-        return null;
+        phoneTimeService.deletePhoneTimeAlarm();
+        return ApiResponse.success(null);
     }
 }

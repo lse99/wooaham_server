@@ -6,7 +6,7 @@ import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.user.Parent;
 import Wooaham.wooaham_server.domain.user.Student;
 import Wooaham.wooaham_server.dto.UserDto;
-import Wooaham.wooaham_server.dto.request.PhoneTimeAlarmRequest;
+import Wooaham.wooaham_server.dto.request.PhoneTimeRequest;
 import Wooaham.wooaham_server.dto.response.PhoneTimeResponse;
 import Wooaham.wooaham_server.repository.ParentRepository;
 import Wooaham.wooaham_server.repository.PhoneTimeAlarmRepository;
@@ -33,14 +33,16 @@ public class PhoneTimeService {
         return PhoneTimeResponse.of(student.getPhoneHour(), student.getPhoneMinute());
     }
 
-    public void updatePhoneUsageTime(){
-        //TODO student 휴대폰 사용시간 어떻게 update 할 건지
+    public Long updatePhoneUsageTime(PhoneTimeRequest req){
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Parent parent = parentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
         Student student = studentRepository.findByUserId(parent.getPrimaryStudentId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
-
+        student.setPhoneHour(req.getHour());
+        student.setPhoneMinute(req.getMinute());
+        studentRepository.save(student);
+        return student.getUserId();
     }
 
     public PhoneTimeResponse findPhoneTimeAlarm(){
@@ -52,7 +54,7 @@ public class PhoneTimeService {
         return PhoneTimeResponse.of(phoneTimeAlarm);
     }
 
-    public Long addPhoneTimeAlarm(PhoneTimeAlarmRequest req){
+    public Long addPhoneTimeAlarm(PhoneTimeRequest req){
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Parent parent = parentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
@@ -69,8 +71,12 @@ public class PhoneTimeService {
         return phoneTimeAlarm.getId();
     }
 
-    public void deletePhoneTimeAlarm(Long alarmId){
-
+    public void deletePhoneTimeAlarm(){
+        UserDto.UserInfo userInfo = jwtService.getUserInfo();
+        Parent parent = parentRepository.findByUserId(userInfo.getUserId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+        PhoneTimeAlarm phoneTimeAlarm = phoneTimeAlarmRepository.findByStudentId(parent.getPrimaryStudentId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_ALARM));
+        phoneTimeAlarmRepository.delete(phoneTimeAlarm);
     }
-
 }
