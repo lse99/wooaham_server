@@ -100,6 +100,7 @@ public class UserDto {
     @AllArgsConstructor
     public static class LogInRes {
         private Long userId;
+        private UserType role;
         private String jwt;
     }
 

@@ -158,7 +158,7 @@ public class UserService {
             UserType role = user.getRole();
             String jwt = jwtService.createJwt(userId, role);
 
-            return new LogInRes(userId, jwt);
+            return new LogInRes(userId, role, jwt);
 
         } else {
             throw new BaseException(ErrorCode.FAILED_TO_LOGIN);
