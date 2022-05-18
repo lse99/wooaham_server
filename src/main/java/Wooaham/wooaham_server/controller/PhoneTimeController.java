@@ -29,7 +29,7 @@ public class PhoneTimeController {
 
     @PutMapping("/alarm")
     public ApiResponse modifyPhoneUsageTimeAlarm(@RequestBody PhoneTimeRequest req){
-        return ApiResponse.success(phoneTimeService.addPhoneTimeAlarm(req));
+        return ApiResponse.success(phoneTimeService.updatePhoneTimeAlarm(req));
     }
 
     @DeleteMapping("/alarm")

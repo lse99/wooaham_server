@@ -24,6 +24,7 @@ public class PhoneTimeService {
     private final PhoneTimeAlarmRepository phoneTimeAlarmRepository;
     private final JwtService jwtService;
 
+    @Transactional(readOnly = true)
     public PhoneTimeResponse findPhoneUsageTime(){
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Parent parent = parentRepository.findByUserId(userInfo.getUserId())
@@ -45,6 +46,7 @@ public class PhoneTimeService {
         return student.getUserId();
     }
 
+    @Transactional(readOnly = true)
     public PhoneTimeResponse findPhoneTimeAlarm(){
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Parent parent = parentRepository.findByUserId(userInfo.getUserId())
@@ -54,7 +56,7 @@ public class PhoneTimeService {
         return PhoneTimeResponse.of(phoneTimeAlarm);
     }
 
-    public Long addPhoneTimeAlarm(PhoneTimeRequest req){
+    public Long updatePhoneTimeAlarm(PhoneTimeRequest req){
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Parent parent = parentRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
