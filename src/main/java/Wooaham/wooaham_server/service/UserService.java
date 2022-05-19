@@ -372,7 +372,7 @@ public class UserService {
         Student student = studentRepository.findById(userDto.getStudentId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_STUDENT));
 
-        parent.setPrimaryStudentId(student.getId());
+        parent.setPrimaryStudentId(student.getUserId());
         parentRepository.save(parent);
 
         return user.getId();
