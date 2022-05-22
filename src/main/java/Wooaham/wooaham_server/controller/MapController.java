@@ -54,7 +54,7 @@ public class MapController {
 
         String urlStr = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_P_MGPRTFA" +
                 "&key=947ADDDF-C1E0-3D54-893B-9BC84D3A44A6" +
-                "&geomfilter=POINT(" + location.getLng() + " " + location.getLat()+ ")";
+                "&geomfilter=POINT(" + location.getLng() + "%20" + location.getLat()+ ")";
 
         URL url = new URL(urlStr);
 
