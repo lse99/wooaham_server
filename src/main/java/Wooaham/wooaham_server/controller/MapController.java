@@ -20,13 +20,13 @@ import java.util.List;
 public class MapController {
 
     @GetMapping("/stores")
-    public JSONObject getStores(@RequestParam(name = "page") Integer page) throws IOException, ParseException {
+    public JSONObject getStores() throws IOException, ParseException {
         StringBuilder result = new StringBuilder();
 
         String urlStr = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_P_MGPRTFA" +
                 "&key=947ADDDF-C1E0-3D54-893B-9BC84D3A44A6" +
                 "&geomfilter=BOX(124,33,131,43)" +
-                "&page=" + page +
+                "&page=1" +
                 "&size=1000";
         URL url = new URL(urlStr);
 
