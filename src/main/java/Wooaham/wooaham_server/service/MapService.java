@@ -2,6 +2,11 @@ package Wooaham.wooaham_server.service;
 
 import Wooaham.wooaham_server.dto.StoreDto;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,6 +14,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -84,8 +90,79 @@ public class MapService {
         return resultList;
     }
 
-    public void getResponseToExcel(Integer page) throws IOException, ParseException {
-        List<StoreDto> response = getResponse(page);
+    public void getResponseToExcel(
+            HttpServletResponse response,
+            Integer page
+    ) throws IOException, ParseException {
+        List<StoreDto> result = getResponse(page);
+
+        Workbook workbook = new SXSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
+
+        // Header
+        int rowIndex = 0;
+        Row headerRow = sheet.createRow(rowIndex++);
+
+        Cell headerCell1 = headerRow.createCell(0);
+        headerCell1.setCellValue("id");
+
+        Cell headerCell2 = headerRow.createCell(1);
+        headerCell2.setCellValue("lat");
+
+        Cell headerCell3 = headerRow.createCell(2);
+        headerCell3.setCellValue("lng");
+
+        Cell headerCell4 = headerRow.createCell(3);
+        headerCell4.setCellValue("fac_nam");
+
+        Cell headerCell5 = headerRow.createCell(4);
+        headerCell5.setCellValue("fac_tel");
+
+        Cell headerCell6 = headerRow.createCell(5);
+        headerCell6.setCellValue("fac_o_add");
+
+        Cell headerCell7 = headerRow.createCell(6);
+        headerCell7.setCellValue("cat_nam");
+
+        Cell headerCell8 = headerRow.createCell(7);
+        headerCell8.setCellValue("fac_n_add");
+
+
+        // Body
+        for (StoreDto p : result) {
+            Row bodyRow = sheet.createRow(rowIndex++);
+
+            Cell bodyCell1 = bodyRow.createCell(0);
+            bodyCell1.setCellValue(p.getId());
+
+            Cell bodyCell2 = bodyRow.createCell(1);
+            bodyCell2.setCellValue(p.getLat());
+
+            Cell bodyCell3 = bodyRow.createCell(2);
+            bodyCell3.setCellValue(p.getLng());
+
+            Cell bodyCell4 = bodyRow.createCell(3);
+            bodyCell4.setCellValue(p.getFac_nam());
+
+            Cell bodyCell5 = bodyRow.createCell(4);
+            bodyCell5.setCellValue(p.getFac_tel());
+
+            Cell bodyCell6 = bodyRow.createCell(5);
+            bodyCell6.setCellValue(p.getFac_o_add());
+
+            Cell bodyCell7 = bodyRow.createCell(6);
+            bodyCell7.setCellValue(p.getCat_nam());
+
+            Cell bodyCell8 = bodyRow.createCell(7);
+            bodyCell8.setCellValue(p.getFac_n_add());
+        }
+
+        // Response
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=Purchase_List.xlsx");
+
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 
 }

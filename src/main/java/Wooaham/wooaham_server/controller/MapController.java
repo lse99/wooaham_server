@@ -12,6 +12,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.Style;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,8 +37,11 @@ public class MapController {
     }
 
     @GetMapping("/excel")
-    public void getResponseToExcel(@RequestParam(name = "page") Integer page) throws IOException, ParseException {
-        mapService.getResponseToExcel(page);
+    public void getResponseToExcel(
+            HttpServletResponse response,
+            @RequestParam(name = "page") Integer page
+    ) throws IOException, ParseException {
+        mapService.getResponseToExcel(response, page);
     }
 
    /* @GetMapping("/stores")
