@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class School {
     @Id
     @GeneratedValue
-    @Column(name = " SD_SCHUL_CODE")
+    @Column(name = "SD_SCHUL_CODE")
     private String schoolCode;
 
     @Column(name = "SCHUL_NM")
