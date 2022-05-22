@@ -3,15 +3,13 @@ package Wooaham.wooaham_server.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class School {
+@Table(name = "school")
+public class SchoolInfo {
     @Id
     @GeneratedValue
     @Column(name = "SD_SCHUL_CODE")
