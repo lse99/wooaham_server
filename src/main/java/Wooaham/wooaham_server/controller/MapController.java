@@ -1,6 +1,7 @@
 package Wooaham.wooaham_server.controller;
 
 import Wooaham.wooaham_server.dto.LocationDto;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -20,7 +21,7 @@ import java.util.List;
 public class MapController {
 
     @GetMapping("/stores")
-    public JSONObject getStores() throws IOException, ParseException {
+    public JSONArray getStores() throws IOException, ParseException {
         StringBuilder result = new StringBuilder();
 
         String urlStr = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_P_MGPRTFA" +
@@ -45,7 +46,12 @@ public class MapController {
 
         JSONParser parser = new JSONParser();
 
-        return (JSONObject) parser.parse(result.toString());
+        JSONObject jsonObject = (JSONObject) parser.parse(result.toString());
+        JSONObject jsonObject2 = (JSONObject) jsonObject.get("response");
+        JSONObject jsonObject3 = (JSONObject) jsonObject2.get("result");
+        JSONObject jsonObject4 = (JSONObject) jsonObject3.get("featureCollection");
+
+        return (JSONArray) jsonObject4.get("features");
     }
 
     @PostMapping("/stores/detail")
