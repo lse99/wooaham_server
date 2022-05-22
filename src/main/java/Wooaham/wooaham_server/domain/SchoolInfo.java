@@ -20,4 +20,7 @@ public class SchoolInfo {
 
     @Column(name = "ATPT_OFCDC_SC_CODE")
     private String officeCode;
+
+    @Column(name = "LCTN_SC_NM")
+    private String region;
 }
