@@ -2,6 +2,7 @@ package Wooaham.wooaham_server.controller;
 
 import Wooaham.wooaham_server.dto.LocationDto;
 import Wooaham.wooaham_server.dto.StoreDto;
+import Wooaham.wooaham_server.dto.response.ApiResponse;
 import Wooaham.wooaham_server.service.MapService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -45,13 +46,13 @@ public class MapController {
     }
 
    @GetMapping("/stores")
-    public List<StoreDto.Simple> getStores(){
-        return mapService.getStores();
+    public ApiResponse<List<StoreDto.Simple>> getStores(){
+        return ApiResponse.success(mapService.getStores());
     }
 
     @GetMapping("/stores/{storeId}")
-    public StoreDto.Detail getStore(@PathVariable(name = "storeId") String id){
-        return mapService.getStore(id);
+    public ApiResponse<StoreDto.Detail> getStore(@PathVariable(name = "storeId") String id){
+        return ApiResponse.success(mapService.getStore(id));
     }
 }
 
