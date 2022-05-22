@@ -44,37 +44,14 @@ public class MapController {
         mapService.getResponseToExcel(response, page);
     }
 
-   /* @GetMapping("/stores")
-    public List<StoreDto> getStores(){
+   @GetMapping("/stores")
+    public List<StoreDto.Simple> getStores(){
         return mapService.getStores();
-    }*/
+    }
 
-    @PostMapping("/stores/detail")
-    public JSONObject getStore(@RequestBody LocationDto location) throws IOException, ParseException {
-        StringBuilder result = new StringBuilder();
-
-        String urlStr = "https://api.vworld.kr/req/data?service=data&request=GetFeature&data=LT_P_MGPRTFA" +
-                "&key=947ADDDF-C1E0-3D54-893B-9BC84D3A44A6" +
-                "&geomfilter=POINT(" + location.getLng() + "%20" + location.getLat() + ")";
-
-        URL url = new URL(urlStr);
-
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestMethod("GET");
-
-        BufferedReader br;
-        br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
-
-        String returnLine;
-
-        while ((returnLine = br.readLine()) != null) {
-            result.append(returnLine).append("\n\r");
-        }
-        httpURLConnection.disconnect();
-
-        JSONParser parser = new JSONParser();
-
-        return (JSONObject) parser.parse(result.toString());
+    @GetMapping("/stores/{storeId}")
+    public StoreDto.Detail getStore(@PathVariable(name = "storeId") String id){
+        return mapService.getStore(id);
     }
 }
 

@@ -1,6 +1,8 @@
 package Wooaham.wooaham_server.service;
 
+import Wooaham.wooaham_server.domain.StoreInfo;
 import Wooaham.wooaham_server.dto.StoreDto;
+import Wooaham.wooaham_server.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -23,11 +25,13 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MapService {
+    private final StoreRepository storeRepository;
     public List<StoreDto> getResponse(Integer page) throws IOException, ParseException {
         StringBuilder result = new StringBuilder();
 
@@ -163,6 +167,18 @@ public class MapService {
 
         workbook.write(response.getOutputStream());
         workbook.close();
+    }
+
+    public List<StoreDto.Simple> getStores(){
+        return storeRepository.findAll().stream()
+                .map(StoreDto.Simple::from)
+                .collect(Collectors.toList());
+    }
+
+    public StoreDto.Detail getStore(String id){
+        return storeRepository.findById(id)
+                .map(StoreDto.Detail::from)
+                .orElseThrow();
     }
 
 }

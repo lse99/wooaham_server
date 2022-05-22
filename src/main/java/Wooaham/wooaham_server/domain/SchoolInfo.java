@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Table(name = "school")
 public class SchoolInfo {
     @Id
-    @GeneratedValue
     @Column(name = "SD_SCHUL_CODE")
     private String schoolCode;
 
