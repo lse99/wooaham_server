@@ -10,6 +10,6 @@ import java.util.List;
 public interface SchoolRepository extends JpaRepository<SchoolInfo, String>, QuerydslPredicateExecutor<SchoolInfo> {
     QSchoolInfo schoolInfo = QSchoolInfo.schoolInfo;
     default List<SchoolInfo> findByName(String name) {
-        return (List<SchoolInfo>) findAll(schoolInfo.schoolName.eq(name));
+        return (List<SchoolInfo>) findAll(schoolInfo.schoolName.contains(name));
     }
 }
