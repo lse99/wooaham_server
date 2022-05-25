@@ -1,48 +1,21 @@
 package Wooaham.wooaham_server.controller;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import Wooaham.wooaham_server.domain.SchoolInfo;
+import Wooaham.wooaham_server.dto.response.ApiResponse;
+import Wooaham.wooaham_server.service.SchoolService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class SchoolController {
 
+    private final SchoolService schoolService;
+
     @GetMapping("/schools")
-    public JSONObject getSchools(@RequestParam(name = "page") Integer page) throws IOException, ParseException{
-
-        StringBuilder result = new StringBuilder();
-
-        //max.pIndex = 13
-        String urlStr = "https://open.neis.go.kr/hub/schoolInfo?" +
-                "KEY=6434846502e44fd39ef97ff67f7371d4" +
-                "&Type=json" +
-                "&pIndex=" + page +
-                "&pSize=1000" ;
-        URL url = new URL(urlStr);
-
-        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-        httpURLConnection.setRequestMethod("GET");
-
-        BufferedReader br;
-        br = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream(), StandardCharsets.UTF_8));
-
-        String returnLine;
-
-        while ((returnLine = br.readLine()) != null) {
-            result.append(returnLine).append("\n\r");
-        }
-        httpURLConnection.disconnect();
-
-        JSONParser parser = new JSONParser();
-
-        return (JSONObject) parser.parse(result.toString());
+    public ApiResponse<List<SchoolInfo>> getSchoolInfo(@RequestParam(name = "name") String schoolName){
+        return ApiResponse.success(schoolService.getSchoolInfo(schoolName));
     }
 }
