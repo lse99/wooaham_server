@@ -210,6 +210,8 @@ public class MapService {
         Long primaryStudentId = parent.getPrimaryStudentId();
         if (primaryStudentId == null) throw new BaseException(ErrorCode.NOTFOUND_CHILDREN);
 
+        if (locationRepository.getRecentStudentLocation(primaryStudentId).size() == 0)
+            throw new BaseException(ErrorCode.NOTFOUND_STUDENT_LOCATION);
         return locationRepository.getRecentStudentLocation(primaryStudentId).get(0);
     }
 
