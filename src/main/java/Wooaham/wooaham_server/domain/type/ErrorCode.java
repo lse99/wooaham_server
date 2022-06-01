@@ -54,6 +54,7 @@ public enum ErrorCode {
     NOTFOUND_HOMEWORK( 404,"NF009", "존재하지 않는 숙제입니다"),
     NOTFOUND_CHILDREN(404,"NF010", "연결된 자녀가 없습니다"),
     NOT_FOUND_SCHOOL(404,"NF011", "학교 정보를 등록해주세요"),
+    NOTFOUND_STUDENT_LOCATION(404,"NF012", "자녀의 위치를 찾을 수 없습니다"),
 
 
     // 405 Method Not Allowed

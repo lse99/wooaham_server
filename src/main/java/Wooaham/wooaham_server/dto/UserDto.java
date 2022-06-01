@@ -190,4 +190,18 @@ public class UserDto {
     public static class ChangeLink {
         private Long studentId;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class Location {
+        private Double lat;
+        private Double lng;
+        public static Location from(Location location) {
+            return Location.builder()
+                    .lat(location.getLat())
+                    .lng(location.getLng())
+                    .build();
+        }
+    }
 }
