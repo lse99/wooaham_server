@@ -1,16 +1,11 @@
 package Wooaham.wooaham_server.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Getter
+@Setter
 @Entity
 @Builder
 @AllArgsConstructor
@@ -18,6 +13,7 @@ import javax.persistence.Table;
 @Table(name = "student_location")
 public class Location {
     @Id
+    @GeneratedValue
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -29,4 +25,10 @@ public class Location {
 
     @Column(name = "latitude", nullable = false)
     private Double lat;
+
+    public Location(Long userId, Double lng, Double lat) {
+        this.userId = userId;
+        this.lng = lng;
+        this.lat = lat;
+    }
 }

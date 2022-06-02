@@ -32,18 +32,16 @@ public class NoticeService {
     private final JwtService jwtService;
 
     @Transactional(readOnly = true)
-    public List<NoticeResponse> findNotices(){
+    public List<NoticeResponse> findNotices() {
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
 
-        if(userInfo.getRole().equals(UserType.STUDENT)){
+        if (userInfo.getRole().equals(UserType.STUDENT)) {
             Student student = studentRepository.findByUserId(userInfo.getUserId()).get();
             return noticeRepository.findAllByClassCode(student.getClassCode());
-        }
-        else if(userInfo.getRole().equals(UserType.TEACHER)){
+        } else if (userInfo.getRole().equals(UserType.TEACHER)) {
             Teacher teacher = teacherRepository.findByUserId(userInfo.getUserId()).get();
             return noticeRepository.findAllByClassCode(teacher.getClassCode());
-        }
-        else{
+        } else {
             Parent parent = parentRepository.findByUserId(userInfo.getUserId()).get();
             Student student = studentRepository.findByUserId(parent.getPrimaryStudentId()).get();
             return noticeRepository.findAllByClassCode(student.getClassCode());
@@ -51,13 +49,13 @@ public class NoticeService {
     }
 
     @Transactional(readOnly = true)
-    public NoticeResponse findOne(Long noticeId){
+    public NoticeResponse findOne(Long noticeId) {
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
         return NoticeResponse.of(findNotice);
     }
 
-    public Long addNotice(NoticeRequest req){
+    public Long addNotice(NoticeRequest req) {
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Teacher user = teacherRepository.findByUserId(userInfo.getUserId())
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_TEACHER));
@@ -66,16 +64,16 @@ public class NoticeService {
         return notice.getId();
     }
 
-    public NoticeResponse updateNotice(Long noticeId, NoticeRequest req){
+    public NoticeResponse updateNotice(Long noticeId, NoticeRequest req) {
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
-        if(req.getTitle()==null && req.getContents()==null){
+        if (req.getTitle() == null && req.getContents() == null) {
             throw new BaseException(ErrorCode.INVALID_MISSING_PARAMETER);
-        } else if(req.getContents()==null){
+        } else if (req.getContents() == null) {
             findNotice.updateTitle(req.getTitle());
-        } else if(req.getTitle()==null){
+        } else if (req.getTitle() == null) {
             findNotice.updateContents(req.getContents());
-        } else{
+        } else {
             findNotice.updateTitle(req.getTitle());
             findNotice.updateContents(req.getContents());
         }
@@ -83,18 +81,18 @@ public class NoticeService {
         return NoticeResponse.of(findNotice);
     }
 
-    public void deleteNotice(Long noticeId){
+    public void deleteNotice(Long noticeId) {
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
         noticeRepository.delete(findNotice);
     }
 
-    public List<String> findReaders(Long noticeId){
+    public List<String> findReaders(Long noticeId) {
         List<String> ret = new ArrayList<>();
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
         List<Reader> readers = findNotice.getReaders();
-        for(Reader r:readers){
+        for (Reader r : readers) {
             ret.add(studentRepository.findByClassCodeAndParent(r.getNotice().getUser().getClassCode(), r.getParent())
                     .getUser().getName() + " 부모님");
         }
@@ -102,12 +100,12 @@ public class NoticeService {
     }
 
 
-    public void checkReading(Long noticeId){
+    public void checkReading(Long noticeId) {
         UserDto.UserInfo userInfo = jwtService.getUserInfo();
         Notice findNotice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_NOTICE));
 
-        if(userInfo.getRole().equals(UserType.PARENT)){
+        if (userInfo.getRole().equals(UserType.PARENT)) {
             Parent user = parentRepository.findByUserId(userInfo.getUserId()).get();
             if (readerRepository.findByNoticeAndParent(findNotice, user) == null) {
                 readerRepository.save(Reader.of(findNotice, user));

@@ -21,7 +21,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -193,6 +196,17 @@ public class MapService {
         return storeRepository.findById(id)
                 .map(StoreDto.Detail::from)
                 .orElseThrow();
+    }
+
+    public void createLocation(Long userId) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+        Double lat = Double.valueOf(request.getHeader("LOCATION-LAT"));
+        Double lng = Double.valueOf(request.getHeader("LOCATION-LNG"));
+
+        Location location = new Location(userId, lng, lat);
+
+        locationRepository.save(location);
     }
 
     public Location getStudentLocation(Long id) {
