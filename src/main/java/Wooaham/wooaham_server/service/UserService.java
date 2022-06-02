@@ -216,6 +216,10 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
+
         User user = userRepository.findActiveUser(userId);
 
         if (checkPw(userDto.getCurrentPw())) {
@@ -245,6 +249,10 @@ public class UserService {
 
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
 
         User user = userRepository.findActiveUser(userId);
 
