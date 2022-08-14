@@ -2,6 +2,7 @@ package Wooaham.wooaham_server.service;
 
 import Wooaham.wooaham_server.domain.BaseException;
 import Wooaham.wooaham_server.domain.Icon;
+import Wooaham.wooaham_server.domain.Location;
 import Wooaham.wooaham_server.domain.type.ErrorCode;
 import Wooaham.wooaham_server.domain.type.UserType;
 import Wooaham.wooaham_server.domain.user.*;
@@ -32,7 +33,9 @@ public class UserService {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final IconRepository iconRepository;
+    private final LocationRepository locationRepository;
     private final JwtService jwtService;
+    private final MapService mapService;
 
     public boolean checkEmail(String email) {
         String emailExp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$";
@@ -165,13 +168,17 @@ public class UserService {
         }
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UserDto getUser(Long userId) {
 
         UserInfo userInfoByJwt = jwtService.getUserInfo();
 
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
 
         return userRepository.findById(userId)
                 .filter(User::isActivated)
@@ -187,6 +194,9 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
 
         User user = userRepository.findActiveUser(userId);
 
@@ -208,6 +218,10 @@ public class UserService {
 
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
 
         User user = userRepository.findActiveUser(userId);
 
@@ -239,6 +253,10 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
+
         User user = userRepository.findActiveUser(userId);
 
         user.setName(userDto.getName());
@@ -253,6 +271,10 @@ public class UserService {
 
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
 
         User user = userRepository.findActiveUser(userId);
 
@@ -293,6 +315,10 @@ public class UserService {
 
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
 
         User user = userRepository.findActiveUser(userId);
 
@@ -336,6 +362,10 @@ public class UserService {
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
 
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
+
         User user_student = userRepository.findActiveUser(userId);
 
         Student student = studentRepository.findByUserId(user_student.getId())
@@ -363,6 +393,10 @@ public class UserService {
 
         if (!Objects.equals(userInfoByJwt.getUserId(), userId))
             throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+        if (userInfoByJwt.getRole() == UserType.STUDENT) {
+            mapService.createLocation(userId);
+        }
 
         User user = userRepository.findActiveUser(userId);
 

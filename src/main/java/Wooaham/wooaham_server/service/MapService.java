@@ -1,8 +1,14 @@
 package Wooaham.wooaham_server.service;
 
-import Wooaham.wooaham_server.domain.StoreInfo;
+import Wooaham.wooaham_server.domain.BaseException;
+import Wooaham.wooaham_server.domain.Location;
+import Wooaham.wooaham_server.domain.type.ErrorCode;
+import Wooaham.wooaham_server.domain.user.Parent;
+import Wooaham.wooaham_server.domain.user.Student;
+import Wooaham.wooaham_server.domain.user.User;
 import Wooaham.wooaham_server.dto.StoreDto;
-import Wooaham.wooaham_server.repository.StoreRepository;
+import Wooaham.wooaham_server.dto.UserDto;
+import Wooaham.wooaham_server.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +21,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,13 +34,21 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MapService {
+    private final JwtService jwtService;
     private final StoreRepository storeRepository;
+    private final UserRepository userRepository;
+    private final ParentRepository parentRepository;
+    private final StudentRepository studentRepository;
+    private final LocationRepository locationRepository;
+
     public List<StoreDto> getResponse(Integer page) throws IOException, ParseException {
         StringBuilder result = new StringBuilder();
 
@@ -169,16 +186,47 @@ public class MapService {
         workbook.close();
     }
 
-    public List<StoreDto.Simple> getStores(){
+    public List<StoreDto.Simple> getStores() {
         return storeRepository.findAll().stream()
                 .map(StoreDto.Simple::from)
                 .collect(Collectors.toList());
     }
 
-    public StoreDto.Detail getStore(String id){
+    public StoreDto.Detail getStore(String id) {
         return storeRepository.findById(id)
                 .map(StoreDto.Detail::from)
                 .orElseThrow();
+    }
+
+    public void createLocation(Long userId) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+
+        Double lat = Double.valueOf(request.getHeader("LOCATION-LAT"));
+        Double lng = Double.valueOf(request.getHeader("LOCATION-LNG"));
+
+        Location location = new Location(userId, lng, lat);
+
+        locationRepository.save(location);
+    }
+
+    public Location getStudentLocation(Long id) {
+
+        UserDto.UserInfo userInfoByJwt = jwtService.getUserInfo();
+
+        if (!Objects.equals(userInfoByJwt.getUserId(), id))
+            throw new BaseException(ErrorCode.INVALID_USER_JWT);
+
+        User user = userRepository.findActiveUser(id);
+
+        Parent parent = parentRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new BaseException(ErrorCode.NOTFOUND_PARENT));
+
+        Long primaryStudentId = parent.getPrimaryStudentId();
+        if (primaryStudentId == null) throw new BaseException(ErrorCode.NOTFOUND_CHILDREN);
+
+        if (locationRepository.getRecentStudentLocation(primaryStudentId).size() == 0)
+            throw new BaseException(ErrorCode.NOTFOUND_STUDENT_LOCATION);
+        return locationRepository.getRecentStudentLocation(primaryStudentId).get(0);
     }
 
 }

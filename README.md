@@ -1,13 +1,17 @@
-# 💚👶wooaham_server👶💚
+# 💚👶우아함 (우리 아이 함께)👶💚
 
-**✨우아함(우리아이함께)✨**
-```
-자녀의 스케줄을 하나의 앱으로 관리할 수 있으면 좋겠다는 생각으로 시작하였으며
+## 📢  서비스 소개
+<img src = "https://user-images.githubusercontent.com/74968390/173279625-d0c10919-3af2-488e-920a-5641e27560a8.png" width = 25%>
+
+**우리 아이와 함께 해요!**  
+부모, 자녀, 교사가 하나로 연결되어 서로의 정보를 주고 받는 서비스  
+`학교 및 반 정보를 등록하여 급식표, 시간표의 정보도 얻을 수 있어요!`    
+>자녀의 스케줄을 하나의 앱으로 관리할 수 있으면 좋겠다는 생각으로 시작하였으며
 해당 어플 하나로 시간 알림, 자녀 위치, 학교의 공지사항 등의 정보를 한 번에 손쉽게 받아볼 수 있도록 하여
 바쁜 학부모들에게 편의를 제공한다.
 주변 편의시설 및 아동지킴이 집 위치를 제공함으로써 학생들에게 편의를 제공하고,
 공지 및 알림 사항 읽은 사람 목록을 표시함으로써 교사들에게도 편의를 제공한다.
-```
+
 **✨상세 기능✨**
 ```
 1. 시간 알림 (자녀 / 학부모) : 등하교 시간, 스쿨버스 시간 등의 알람 + 배너 알림
@@ -19,74 +23,62 @@
 4. 휴대폰 사용시간 (학부모) : 자녀의 휴대폰 사용시간 , 설정한 시간 초과시 부모님한테 알림
 
 ```
-**✨Figma✨**
 
+## ⚙️  기술 스택 - Server
+- **Java + Spring Boot**
+  - JPA
+- **MySQL**
+
+- **AWS (EC2, RDS)**
+
+- **JWT**
+- **OPEN API**
+  <br/>
+## ⚙️  기술 스택 - iOS
+- **Swift**
+- **Library**
+  - Alamofire
+  - SnapKit
+
+
+## 🗂  폴더링 - iOS
+```
+Wooaham 
+├── AppDelegate.swift  
+├── SceneDelegate.swift  
+├── Assets.xcassets  
+├── Constants  
+├── Util/  
+│   ├── Extension  
+│   └── + Util
+├── Network/  
+│   ├── APIConstants/  
+│   ├── APIModels/  
+│   └── APIServices/  
+├── Secret/  
+└── Source/  
+    ├── Login/  
+    ├── Home/  
+    ├── Alarm/  
+    ├── Map/  
+    └── MyPage/  
+```
+
+## 📱 기능 및 View
+<img src = "https://user-images.githubusercontent.com/74968390/173288728-e1166933-051a-4de9-aa85-8c6788919d17.jpg">
+<img src = "https://user-images.githubusercontent.com/74968390/173289542-6b1194cf-cb0d-428d-9165-8e09fee08f07.jpg">
+<img src = "https://user-images.githubusercontent.com/74968390/173289548-a1689d14-10b5-4694-8bec-55e3bd1dbdfc.jpg">
+<img src = "https://user-images.githubusercontent.com/74968390/173289603-6984912a-cb3a-42d1-9fcc-088ef58f7943.jpg">
+<img src = "https://user-images.githubusercontent.com/74968390/173289617-86207c2d-3d12-458b-ac6c-3247ca117e62.jpg">
+<img src = "https://user-images.githubusercontent.com/74968390/173289625-95e1c2d7-bb9b-424d-835a-82224c758812.jpg">
+<img src = "https://user-images.githubusercontent.com/74968390/173289951-3e2d37e9-b0b7-4343-a756-91127cae7e94.jpg">
+
+## ✏️ Figma
 <https://www.figma.com/file/ezszxtQYRm7PW9j6GyKPdW/%EC%9A%B0%EC%95%84%ED%95%A8?node-id=0%3A1>
 
-<br/>
-<br/>
-
-## 💡 git 사용 규칙
-- master 에서 직접 작업하지 않는다 (master로 바로 push 하지 않는다)
-- branchname : 본인 이니셜/작업일자
-
-<br/>
-
-## 💡 서버 배포(AWS EC2내에서 실행)
-**1. AWS 접속 -- ssh 인증으로 콘솔에 접속**
-
-**2. /home/ubuntu/app/wooaham_server/로 이동**
-
-```
-cd app/wooaham_server/
-```
-**3. git 에 있는 최신 master 브랜치 반영**
-
-```
-git pull origin master
-```
-**4. 배포할 버전 빌드 - 아직 이름 붙이는 건 X**
-
-```
-./gradlew build
-```
-**권한 관련 문제 발생시**
-```
-sudo chmod 777 ./gradlew && ./gradlew build
-```
-**5. 빌드 성공 후**
-
-```
-cd build/libs && ls
-```
-보이는 파일 중 뒤에 plain 없는 .jar 실행
-
-<br/>
-
-## 💡 RUN SERVER
-**포그라운드 (터미널 닫으면 서버 닫힘)**
-```
-java -jar wooaham_server-0.0.1-SNAPSHOT.jar
-```
-**백그라운드 (터미널 닫아도 서버 유지)**
-**- 실행**
-```
-nohup java -jar build/libs/wooaham_server-0.0.1-SNAPSHOT.jar &
-```
-- nohup은 터미널을 꺼도 애플리케이션이 꺼지지 않도록 하는 명령어
-- &는 애플리케이션이 백그라운드에서 돌아갈 수 있도록 하는 명령어
-
- 
-**백그라운드 로그 확인**
-```
-tail -f nohup.out
-```
-**서버 배포 전에 꼭 이전 프로세스 종료 시키기!  
-종료시키기 위한 프로세스 아이디 확인**
-```
-sudo netstat -ntlp | grep :9000
-```
-**백그라운드 실행 종료**
-```
-kill -9 [프로세스 아이디]
-```
+## 👨‍👩‍👦‍👦 팀원
+| 이름  |   담당   |
+|:---:|:------:|
+| 김영인 |  iOS   |
+| 이성은 | Server |
+| 이주희 | Server |
